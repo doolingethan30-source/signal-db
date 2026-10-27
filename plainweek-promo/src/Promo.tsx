@@ -1,5 +1,5 @@
 import {AbsoluteFill, Audio, Sequence, spring, staticFile, useCurrentFrame} from 'remotion';
-import {easeInOut, prog} from './anim';
+import {easeInOut, mix, prog} from './anim';
 import {Phone} from './components/Phone';
 import {loadFonts} from './fonts';
 import {Captions} from './scenes/Captions';
@@ -10,8 +10,8 @@ import {DragScene, dragWeek} from './screens/DragScene';
 import {Habits} from './screens/Habits';
 import {HomeScreen, WIDGET_TICKS} from './screens/HomeScreen';
 import {Review} from './screens/Review';
-import {TypeScene, typeWeek} from './screens/TypeScene';
-import {WeekView} from './screens/WeekView';
+import {TypeScene} from './screens/TypeScene';
+import {cloneWeek, WeekView} from './screens/WeekView';
 import {C, FPS, T} from './theme';
 
 loadFonts();
@@ -54,7 +54,7 @@ const LAYERS: Layer[] = [
       const f = frame - T.intro[0];
       return (
         <WeekView
-          days={typeWeek(0)}
+          days={cloneWeek()}
           appear={Array.from({length: 7}, (_, i) => prog(f, 10 + i * 4, 18))}
           ringScale={prog(f, 34, 40, easeInOut)}
         />
@@ -73,10 +73,7 @@ const LAYERS: Layer[] = [
     zoom: true,
     render: (frame) => {
       const f = frame - T.final[0];
-      const week = dragWeek(200).map((d, i) => ({
-        ...d,
-        tasks: d.tasks.map((t, j) => ({...t, done: Math.max(t.done, prog(f, 4 + i * 3 + j * 1.5, 10))})),
-      }));
+      const week = dragWeek(200).map((d, i) => ({...d, done: mix(d.done, d.total, prog(f, 4 + i * 3, 14))}));
       return <WeekView days={week} />;
     },
   },
@@ -147,11 +144,11 @@ const SoundDesign: React.FC = () => (
       <Sfx key={`ping${i}`} at={at} src="pop.wav" volume={0.18} rate={[1, 1.25, 0.9, 1.4, 1.1][i % 5]} />
     ))}
     <Sfx at={84} src="whoosh.wav" volume={0.55} />
-    <Sfx at={T.type[0] + 2} src="pop.wav" volume={0.22} />
-    <Sfx at={276} src="pop.wav" volume={0.25} rate={1.2} />
-    <Sfx at={282} src="pop.wav" volume={0.25} rate={1.3} />
-    <Sfx at={292} src="tick.wav" volume={0.35} />
-    <Sfx at={T.drag[0] + 10} src="pop.wav" volume={0.22} rate={0.9} />
+    <Sfx at={T.type[0] + 4} src="pop.wav" volume={0.22} />
+    <Sfx at={T.type[0] + 64} src="pop.wav" volume={0.25} rate={1.2} />
+    <Sfx at={T.type[0] + 70} src="pop.wav" volume={0.25} rate={1.3} />
+    <Sfx at={T.type[0] + 74} src="tick.wav" volume={0.35} />
+    <Sfx at={T.drag[0] + 14} src="pop.wav" volume={0.22} rate={0.9} />
     <Sfx at={T.drag[0] + 66} src="tick.wav" volume={0.35} />
     <Sfx at={T.widget[0] - 6} src="whoosh.wav" volume={0.3} />
     {WIDGET_TICKS.map((at, i) => (

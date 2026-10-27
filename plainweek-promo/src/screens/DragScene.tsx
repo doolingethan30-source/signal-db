@@ -1,68 +1,66 @@
 import {interpolate} from 'remotion';
 import {easeInOut, prog} from '../anim';
-import {C} from '../theme';
-import {cloneWeek, slotPos, TaskLine, WeekView} from './WeekView';
+import {CheckBox} from '../components/Icons';
+import {A, SANS} from '../theme';
+import {cloneWeek, rowPos, WeekView} from './WeekView';
 
-const LIFT = 10;
-const MOVE = 24;
+const PRESS = 8;
+const LIFT = 14;
+const MOVE = 26;
 const DROP = 66;
 
 export const dragWeek = (f: number) => {
   const week = cloneWeek();
-  week[3].tasks.push({id: 'h3', title: 'Pick up flowers', meta: '6:00 PM', done: 0});
-  const lifted = f >= LIFT;
-  const collapse = 1 - prog(f, DROP + 2, 14, easeInOut);
-  if (lifted) {
-    week[1].tasks[0] = {...week[1].tasks[0], ghost: 1, size: collapse};
-  }
-  const hover = prog(f, 40, 16, easeInOut);
-  if (f >= 40) {
-    if (f < DROP) {
-      week[2].tasks.push({id: 'w3', title: '', done: 0, ghost: 1, size: hover});
-    } else {
-      week[2].tasks.push({
-        id: 'w3',
-        title: 'Write proposal',
-        done: 0,
-        glow: 1 - prog(f, DROP + 10, 30),
-      });
-    }
-  }
+  week[3].total = 3; // the task typed in the previous scene
+  const settle = prog(f, DROP, 12, easeInOut);
+  week[1].total = 3 - settle;
+  week[4].total = 4 + settle;
   return week;
 };
 
 export const DragScene: React.FC<{f: number}> = ({f}) => {
+  const press = f >= PRESS && f < LIFT + 4 ? Math.sin(((f - PRESS) / 10) * Math.PI) : 0;
   const lift = prog(f, LIFT, 10);
   const move = prog(f, MOVE, DROP - MOVE, easeInOut);
-  const drop = prog(f, DROP - 4, 8);
-  const from = slotPos(1, 0);
-  const to = slotPos(2, 2);
-  const x = interpolate(move, [0, 1], [from.x, to.x]) + Math.sin(move * Math.PI) * 26;
-  const y = interpolate(move, [0, 1], [from.y, to.y]);
+  const drop = prog(f, DROP - 4, 10);
+  const from = rowPos(1);
+  const to = rowPos(4);
+  const x = from.x + 40 + Math.sin(move * Math.PI) * 30;
+  const y = interpolate(move, [0, 1], [from.y + 10, to.y + 10]);
   const rot = Math.sin(move * Math.PI) * -3 + lift * -1.5 * (1 - drop);
-  const scale = 1 + lift * 0.08 * (1 - drop);
-  const zone = Math.min(prog(f, 36, 10), 1 - prog(f, DROP + 2, 14));
-  const dropZone = [0, 0, zone, 0, 0, 0, 0];
+  const scale = (0.85 + 0.15 * lift) * (1 - drop * 0.3);
+  const zone = Math.min(prog(f, 44, 10), 1 - prog(f, DROP + 6, 16));
+  const thursFlash = 1 - prog(f, 0, 24);
+  const highlight = [0, 0, 0, thursFlash, zone, 0, 0];
 
   return (
     <div style={{position: 'absolute', inset: 0}}>
-      <WeekView days={dragWeek(f)} dropZone={dropZone} />
-      {f >= LIFT && f < DROP + 4 && (
+      <WeekView days={dragWeek(f)} highlight={highlight} press={[0, press, 0, 0, 0, 0, 0]} />
+      {f >= LIFT && f < DROP + 6 && (
         <div
           style={{
             position: 'absolute',
-            left: x - 10,
-            top: y - 7,
-            padding: '4px 14px 4px 10px',
-            borderRadius: 12,
-            background: C.card,
+            left: x,
+            top: y,
+            width: 260,
+            height: 50,
+            borderRadius: 14,
+            background: '#fff',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            padding: '0 14px',
+            boxSizing: 'border-box',
+            fontFamily: SANS,
             transform: `rotate(${rot}deg) scale(${scale})`,
-            transformOrigin: '30% 50%',
-            boxShadow: `0 ${4 + lift * 14}px ${10 + lift * 26}px rgba(42,41,39,${0.1 + lift * 0.14}), 0 0 0 1px rgba(103,127,97,${0.35 * lift})`,
-            opacity: 1 - prog(f, DROP, 4),
+            boxShadow: `0 ${6 + lift * 14}px ${14 + lift * 26}px rgba(29,28,26,${0.12 + lift * 0.12}), 0 0 0 1.5px rgba(255,90,31,${0.6 * lift})`,
+            opacity: lift * (1 - prog(f, DROP + 1, 5)),
+            zIndex: 6,
           }}
         >
-          <TaskLine task={{id: 'drag', title: 'Write proposal', done: 0}} fontSize={13} />
+          <CheckBox size={22} done={0} />
+          <span style={{fontSize: 15, color: A.ink}}>Review budget</span>
+          <span style={{marginLeft: 'auto', fontSize: 14, color: A.sub}}>11:00</span>
         </div>
       )}
     </div>

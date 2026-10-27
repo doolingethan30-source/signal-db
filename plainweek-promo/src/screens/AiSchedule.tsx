@@ -3,7 +3,7 @@ import {easeInOut, mix, pop, prog} from '../anim';
 import {Check, Sparkle} from '../components/Icons';
 import {StatusBar} from '../components/Phone';
 import {ProBadge} from '../components/ProBadge';
-import {C, SANS, SERIF} from '../theme';
+import {A, SANS} from '../theme';
 
 const GRID_TOP = 352;
 const HOUR_H = 34;
@@ -23,6 +23,8 @@ const BUSY = [
   [4, 12, 1], [4, 19.5, 0.5], [5, 9, 1.5], [6, 17, 1], [1, 16, 0.75], [5, 12, 1],
 ] as const;
 
+const EVENT_COLORS = [A.blue, A.green, A.purple, '#A39E96'];
+
 const PLAN = [
   {label: 'Deep work · 2h', short: 'Deep work', chip: {x: 32, y: 192, w: 150, h: 32}, to: block(2, 9, 2), at: 34},
   {label: 'Gym · 1h', short: 'Gym', chip: {x: 190, y: 192, w: 96, h: 32}, to: block(4, 17, 1), at: 42},
@@ -38,12 +40,12 @@ export const AiSchedule: React.FC<{f: number}> = ({f}) => {
   const finished = prog(f, 72, 10);
   const placed = PLAN.filter((p) => f >= p.at + FLIGHT).length;
   return (
-    <div style={{position: 'absolute', inset: 0, background: C.paper, fontFamily: SANS}}>
+    <div style={{position: 'absolute', inset: 0, background: A.bg, fontFamily: SANS}}>
       <StatusBar />
       <div style={{position: 'absolute', left: 24, top: 62, right: 24}}>
         <ProBadge />
-        <div style={{fontFamily: SERIF, fontSize: 38, lineHeight: '44px', marginTop: 6}}>Plan my week</div>
-        <div style={{fontSize: 13, color: C.inkSoft, marginTop: 2}}>
+        <div style={{fontSize: 28, fontWeight: 700, letterSpacing: -0.5, lineHeight: '36px', marginTop: 8}}>Plan my week</div>
+        <div style={{fontSize: 13, color: A.sub, marginTop: 2}}>
           {placed === 0 ? '4 tasks to fit in · 11h free this week' : `${placed} of 4 placed around your calendar`}
         </div>
       </div>
@@ -56,7 +58,7 @@ export const AiSchedule: React.FC<{f: number}> = ({f}) => {
           top: 180,
           height: 94,
           borderRadius: 18,
-          border: `1px dashed ${C.line}`,
+          border: `1px dashed ${A.line}`,
           background: '#F7F5EF',
         }}
       />
@@ -69,8 +71,8 @@ export const AiSchedule: React.FC<{f: number}> = ({f}) => {
           top: 286,
           height: 46,
           borderRadius: 16,
-          background: C.ink,
-          color: C.paper,
+          background: A.orange,
+          color: '#fff',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -89,12 +91,12 @@ export const AiSchedule: React.FC<{f: number}> = ({f}) => {
               bottom: 0,
               width: 120,
               left: -120 + sweep * 520,
-              background: 'linear-gradient(90deg, rgba(139,162,133,0), rgba(139,162,133,0.45), rgba(139,162,133,0))',
+              background: 'linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.45), rgba(255,255,255,0))',
               opacity: thinking,
             }}
           />
         )}
-        {finished > 0.5 ? <Check size={14} color={C.sage} /> : <Sparkle size={14} color={C.sage} />}
+        {finished > 0.5 ? <Check size={14} color="#fff" /> : <Sparkle size={14} color="#fff" />}
         <span style={{position: 'relative'}}>
           {finished > 0.5 ? 'Week planned' : thinking > 0.2 ? 'Finding the best times…' : 'Auto-schedule'}
         </span>
@@ -111,7 +113,7 @@ export const AiSchedule: React.FC<{f: number}> = ({f}) => {
               textAlign: 'center',
               fontSize: 11,
               fontWeight: 600,
-              color: i === 1 ? C.sageDeep : C.mute,
+              color: i === 1 ? A.orange : A.sub,
             }}
           >
             {d}
@@ -119,10 +121,10 @@ export const AiSchedule: React.FC<{f: number}> = ({f}) => {
         ))}
         {Array.from({length: 13}).map((_, h) => (
           <div key={h} style={{position: 'absolute', top: 22 + h * HOUR_H, left: 10, right: 16, display: 'flex', alignItems: 'center'}}>
-            <span style={{width: 34, fontSize: 9, color: C.mute, transform: 'translateY(-1px)'}}>
+            <span style={{width: 34, fontSize: 9, color: A.sub, transform: 'translateY(-1px)'}}>
               {h % 2 === 0 ? `${((START_H + h - 1) % 12) + 1}${START_H + h < 12 ? 'a' : 'p'}` : ''}
             </span>
-            <div style={{flex: 1, height: 1, background: C.line, opacity: 0.8}} />
+            <div style={{flex: 1, height: 1, background: A.line, opacity: 0.8}} />
           </div>
         ))}
       </div>
@@ -131,7 +133,17 @@ export const AiSchedule: React.FC<{f: number}> = ({f}) => {
         return (
           <div
             key={i}
-            style={{position: 'absolute', left: b.x, top: b.y, width: b.w, height: b.h, borderRadius: 7, background: '#ECE6DA'}}
+            style={{
+              position: 'absolute',
+              left: b.x,
+              top: b.y,
+              width: b.w,
+              height: b.h,
+              borderRadius: 6,
+              background: `${EVENT_COLORS[i % EVENT_COLORS.length]}22`,
+              borderLeft: `3px solid ${EVENT_COLORS[i % EVENT_COLORS.length]}`,
+              boxSizing: 'border-box',
+            }}
           />
         );
       })}
@@ -144,7 +156,7 @@ export const AiSchedule: React.FC<{f: number}> = ({f}) => {
             height: 12 * HOUR_H,
             left: COL_X + Math.floor(((f - 16) / 5) % 7) * COL_W,
             width: COL_W,
-            background: 'rgba(139,162,133,0.10)',
+            background: 'rgba(255,90,31,0.10)',
             opacity: thinking * (1 - placed / 4),
           }}
         />
@@ -156,7 +168,7 @@ export const AiSchedule: React.FC<{f: number}> = ({f}) => {
         const y = mix(p.chip.y, p.to.y, t) - Math.sin(t * Math.PI) * 40;
         const w = mix(p.chip.w, p.to.w, t);
         const h = mix(p.chip.h, p.to.h, t);
-        const bg = t > 0.5 ? C.sage : C.card;
+        const bg = t > 0.5 ? A.orange : '#FBFAF8';
         const s = f >= p.at + FLIGHT ? 1 + Math.sin(Math.min(1, landed) * Math.PI) * 0.08 : 1;
         return (
           <div
@@ -169,7 +181,7 @@ export const AiSchedule: React.FC<{f: number}> = ({f}) => {
               height: h,
               borderRadius: mix(16, 7, t),
               background: bg,
-              border: t > 0.5 ? 'none' : `1px solid ${C.line}`,
+              border: t > 0.5 ? 'none' : `1px solid ${A.line}`,
               boxShadow: t > 0 && t < 1 ? '0 10px 24px rgba(42,41,39,0.18)' : '0 1px 2px rgba(42,41,39,0.05)',
               display: 'flex',
               alignItems: t > 0.5 ? 'flex-start' : 'center',
@@ -185,7 +197,7 @@ export const AiSchedule: React.FC<{f: number}> = ({f}) => {
               style={{
                 fontSize: t > 0.5 ? 8.5 : 13,
                 fontWeight: t > 0.5 ? 600 : 500,
-                color: t > 0.5 ? '#fff' : C.ink,
+                color: t > 0.5 ? '#fff' : A.ink,
                 whiteSpace: 'nowrap',
                 opacity: interpolate(Math.abs(t - 0.5), [0, 0.2], [0, 1], {extrapolateRight: 'clamp'}),
               }}
@@ -204,8 +216,8 @@ export const AiSchedule: React.FC<{f: number}> = ({f}) => {
           bottom: 30 + (1 - finished) * -10,
           height: 40,
           borderRadius: 20,
-          background: C.ink,
-          color: C.paper,
+          background: A.ink,
+          color: A.bg,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -217,7 +229,7 @@ export const AiSchedule: React.FC<{f: number}> = ({f}) => {
           boxShadow: '0 10px 24px rgba(42,41,39,0.2)',
         }}
       >
-        <Sparkle size={12} color={C.sage} /> 4 tasks scheduled in free time
+        <Sparkle size={12} color={A.orange} /> 4 tasks scheduled in free time
       </div>
     </div>
   );

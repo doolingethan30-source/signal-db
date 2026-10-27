@@ -1,7 +1,7 @@
 import {Sparkle} from './Icons';
-import {C} from '../theme';
+import {A} from '../theme';
 
-export const ProBadge: React.FC<{dark?: boolean}> = ({dark}) => (
+export const ProBadge: React.FC = () => (
   <span
     style={{
       display: 'inline-flex',
@@ -12,11 +12,11 @@ export const ProBadge: React.FC<{dark?: boolean}> = ({dark}) => (
       letterSpacing: 1.4,
       padding: '4px 8px',
       borderRadius: 8,
-      color: dark ? C.paper : C.sageDeep,
-      background: dark ? C.ink : C.sageSoft,
+      color: A.orange,
+      background: A.orangeSoft,
     }}
   >
-    <Sparkle size={9} color={dark ? C.sage : C.sageDeep} />
+    <Sparkle size={9} color={A.orange} />
     PRO
   </span>
 );

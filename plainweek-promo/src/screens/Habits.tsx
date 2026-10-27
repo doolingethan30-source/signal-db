@@ -3,7 +3,7 @@ import {pop, prog} from '../anim';
 import {Check, Leaf} from '../components/Icons';
 import {StatusBar} from '../components/Phone';
 import {ProBadge} from '../components/ProBadge';
-import {C, SANS, SERIF} from '../theme';
+import {A, SANS} from '../theme';
 
 const HABITS = [
   {name: 'Walk 8,000 steps', streak: 12, days: [1, 1, 1, 1, 1, 0, 0]},
@@ -17,12 +17,12 @@ export const Habits: React.FC<{f: number}> = ({f}) => {
   const count = Math.round(interpolate(f, [8, 40], [14, 21], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}));
   const bump = f >= 40 ? pop(f, 40, 10) : 0;
   return (
-    <div style={{position: 'absolute', inset: 0, background: C.paper, fontFamily: SANS}}>
+    <div style={{position: 'absolute', inset: 0, background: A.bg, fontFamily: SANS}}>
       <StatusBar />
       <div style={{position: 'absolute', left: 24, top: 62, right: 24}}>
         <ProBadge />
-        <div style={{fontFamily: SERIF, fontSize: 38, lineHeight: '44px', marginTop: 6}}>Habits</div>
-        <div style={{fontSize: 13, color: C.inkSoft, marginTop: 2}}>Small things, every day.</div>
+        <div style={{fontSize: 28, fontWeight: 700, letterSpacing: -0.5, lineHeight: '36px', marginTop: 8}}>Habits</div>
+        <div style={{fontSize: 13, color: A.sub, marginTop: 2}}>Small things, every day.</div>
       </div>
       {/* hero streak card */}
       <div
@@ -33,8 +33,8 @@ export const Habits: React.FC<{f: number}> = ({f}) => {
           top: 180,
           height: 196,
           borderRadius: 24,
-          background: C.ink,
-          color: C.paper,
+          background: A.ink,
+          color: A.bg,
           padding: '20px 22px',
           boxSizing: 'border-box',
           overflow: 'hidden',
@@ -48,17 +48,18 @@ export const Habits: React.FC<{f: number}> = ({f}) => {
             width: 200,
             height: 200,
             borderRadius: 100,
-            background: 'radial-gradient(circle, rgba(139,162,133,0.35), rgba(139,162,133,0) 70%)',
+            background: 'radial-gradient(circle, rgba(255,90,31,0.35), rgba(255,90,31,0) 70%)',
           }}
         />
-        <div style={{display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#BFC9B9', fontWeight: 600, letterSpacing: 1}}>
-          <Leaf size={13} color={C.sage} /> MORNING PAGES
+        <div style={{display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#C9C4BC', fontWeight: 600, letterSpacing: 1}}>
+          <Leaf size={13} color={A.orange} /> MORNING PAGES
         </div>
         <div style={{display: 'flex', alignItems: 'baseline', gap: 10, marginTop: 6}}>
           <span
             style={{
-              fontFamily: SERIF,
-              fontSize: 84,
+              fontSize: 76,
+              fontWeight: 700,
+              letterSpacing: -2,
               lineHeight: '84px',
               fontVariantNumeric: 'tabular-nums',
               display: 'inline-block',
@@ -80,7 +81,7 @@ export const Habits: React.FC<{f: number}> = ({f}) => {
                   width: 9,
                   height: 18,
                   borderRadius: 4,
-                  background: on ? C.sage : 'rgba(255,255,255,0.12)',
+                  background: on ? A.orange : 'rgba(255,255,255,0.12)',
                   opacity: on ? 0.55 + (i / 21) * 0.45 : 1,
                 }}
               />
@@ -101,8 +102,8 @@ export const Habits: React.FC<{f: number}> = ({f}) => {
               top: 394 + i * 96,
               height: 84,
               borderRadius: 18,
-              background: C.card,
-              border: `1px solid ${C.line}`,
+              background: '#FBFAF8',
+              border: `1px solid ${A.line}`,
               padding: '14px 16px',
               boxSizing: 'border-box',
               opacity: rowIn,
@@ -111,7 +112,7 @@ export const Habits: React.FC<{f: number}> = ({f}) => {
           >
             <div style={{display: 'flex', alignItems: 'center'}}>
               <span style={{fontSize: 15, fontWeight: 600}}>{h.name}</span>
-              <span style={{marginLeft: 'auto', fontSize: 12, color: C.sageDeep, fontWeight: 600, display: 'flex', gap: 4, alignItems: 'center'}}>
+              <span style={{marginLeft: 'auto', fontSize: 12, color: A.orange, fontWeight: 600, display: 'flex', gap: 4, alignItems: 'center'}}>
                 <Leaf size={11} /> {h.streak + (f > 30 + i * 5 ? 1 : 0)} days
               </span>
             </div>
@@ -127,15 +128,15 @@ export const Habits: React.FC<{f: number}> = ({f}) => {
                       width: 34,
                       height: 24,
                       borderRadius: 8,
-                      background: fill > 0.05 ? `rgba(139,162,133,${0.25 + fill * 0.75})` : '#F1EEE7',
-                      border: isToday ? `1.5px solid ${C.sage}` : 'none',
+                      background: fill > 0.05 ? `rgba(255,90,31,${0.25 + fill * 0.75})` : '#F1EEE7',
+                      border: isToday ? `1.5px solid ${A.orange}` : 'none',
                       boxSizing: 'border-box',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       fontSize: 10,
                       fontWeight: 600,
-                      color: fill > 0.5 ? '#fff' : C.mute,
+                      color: fill > 0.5 ? '#fff' : A.sub,
                     }}
                   >
                     {fill > 0.6 ? <Check size={11} progress={Math.min(1, (fill - 0.6) * 3)} /> : l}

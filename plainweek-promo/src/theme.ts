@@ -34,3 +34,19 @@ export const T = {
   review: [725, 805],
   final: [805, 900],
 } as const;
+
+// In-app palette, matched to the Plainweek UI mockups.
+export const A = {
+  bg: '#FAF8F5',
+  card: '#F2EFEA',
+  todayCard: 'linear-gradient(100deg, #FCE6D8 0%, #F7EEE7 55%, #F4F0EB 100%)',
+  ink: '#1D1C1A',
+  sub: '#8C877F',
+  track: '#DAD6D0',
+  line: '#E9E5DF',
+  orange: '#FF5A1F',
+  orangeSoft: '#FFE6D8',
+  blue: '#4A90E2',
+  green: '#34B36A',
+  purple: '#8B5CF6',
+};

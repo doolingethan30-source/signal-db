@@ -97,7 +97,7 @@ export const LogoMark: React.FC<{size?: number; fill?: number}> = ({size = 64, f
             width={3.6}
             height={bh}
             rx={1.8}
-            fill={i === 3 ? C.sage : '#F4F1EA'}
+            fill={i === 3 ? '#FF5A1F' : '#F4F1EA'}
             opacity={i === 3 ? 1 : 0.9}
           />
         );
@@ -105,3 +105,42 @@ export const LogoMark: React.FC<{size?: number; fill?: number}> = ({size = 64, f
     </svg>
   );
 };
+
+/** Square, rounded checkbox used throughout the Plainweek app. */
+export const CheckBox: React.FC<{size?: number; done: number}> = ({size = 24, done}) => {
+  const on = done > 0.05;
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        borderRadius: size * 0.22,
+        border: on ? 'none' : `1.6px solid #2A2927`,
+        background: on ? '#FF5A1F' : 'transparent',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexShrink: 0,
+        boxSizing: 'border-box',
+        transform: `scale(${1 + Math.sin(Math.min(done, 1) * Math.PI) * 0.2})`,
+      }}
+    >
+      {on && <Check size={size * 0.7} progress={Math.min(1, done * 1.4)} />}
+    </div>
+  );
+};
+
+export const Chevron: React.FC<{size?: number; color?: string; dir?: 'left' | 'right' | 'down'}> = ({
+  size = 14,
+  color = '#8C877F',
+  dir = 'right',
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 16 16"
+    style={{transform: dir === 'left' ? 'rotate(180deg)' : dir === 'down' ? 'rotate(90deg)' : undefined}}
+  >
+    <path d="M6 3 L11 8 L6 13" fill="none" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);

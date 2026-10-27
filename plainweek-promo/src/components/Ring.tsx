@@ -1,4 +1,4 @@
-import {C} from '../theme';
+import {A} from '../theme';
 
 export const Ring: React.FC<{
   size: number;
@@ -7,7 +7,7 @@ export const Ring: React.FC<{
   color?: string;
   track?: string;
   children?: React.ReactNode;
-}> = ({size, stroke = 4, value, color = C.sage, track = C.line, children}) => {
+}> = ({size, stroke = 4, value, color = A.orange, track = A.track, children}) => {
   const r = (size - stroke) / 2;
   const circ = 2 * Math.PI * r;
   const v = Math.max(0, Math.min(1, value));
