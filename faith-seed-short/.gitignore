@@ -1,5 +1,4 @@
 node_modules
-out/*.png
-out/frames
 .remotion
-out/*.log
+out/*
+!out/faith-seed-short.mp4
