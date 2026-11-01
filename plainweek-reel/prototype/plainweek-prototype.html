@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Plainweek prototype</title>
+<style>
+@font-face { font-family: Inter; font-weight: 400; src: url(../assets/fonts/inter-latin-400-normal.woff2) format('woff2'); }
+@font-face { font-family: Inter; font-weight: 500; src: url(../assets/fonts/inter-latin-500-normal.woff2) format('woff2'); }
+@font-face { font-family: Inter; font-weight: 600; src: url(../assets/fonts/inter-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: Inter; font-weight: 700; src: url(../assets/fonts/inter-latin-700-normal.woff2) format('woff2'); }
+
+:root {
+  --bg: #FAF7F2;
+  --card: #FFFFFF;
+  --card-2: #F3EFE8;
+  --ink: #1F1D1A;
+  --sub: #8A847B;
+  --line: #ECE6DD;
+  --track: #E5DFD6;
+  --accent: #E07A3F;
+  --accent-soft: #FBE8DB;
+  --card-border: rgba(0,0,0,0);
+  --card-shadow: 0 1px 2px rgba(31,29,26,.04), 0 8px 24px rgba(31,29,26,.05);
+  --blur: none;
+  --blobs: 0;
+  --ease: cubic-bezier(.22,1,.36,1);
+}
+body.dark {
+  --bg: #121110;
+  --card: #1E1C1A;
+  --card-2: #262320;
+  --ink: #F4F1EC;
+  --sub: #9C958B;
+  --line: #2F2B27;
+  --track: #3A3631;
+  --accent-soft: rgba(224,122,63,.2);
+  --card-shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.25);
+}
+body.glass-soft { --card: rgba(255,255,255,.72); --card-2: rgba(255,255,255,.5); --blur: blur(14px) saturate(140%); --card-border: rgba(255,255,255,.7); --blobs: .45; }
+body.glass-full { --card: rgba(255,255,255,.42); --card-2: rgba(255,255,255,.32); --blur: blur(24px) saturate(180%); --card-border: rgba(255,255,255,.75); --blobs: 1; --bg: #F6EDE4; }
+body.dark.glass-soft { --card: rgba(44,40,36,.7); --card-2: rgba(60,54,49,.5); --card-border: rgba(255,255,255,.08); }
+body.dark.glass-full { --card: rgba(46,41,37,.42); --card-2: rgba(70,62,56,.35); --card-border: rgba(255,255,255,.12); --bg: #15110E; }
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; overflow: hidden; }
+body {
+  font-family: Inter, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  transition: background-color .7s var(--ease), color .7s var(--ease);
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; border: 0; background: none; padding: 0; cursor: pointer; }
+
+/* ambient blobs, revealed by the glass styles */
+#blobs { position: fixed; inset: -10%; opacity: var(--blobs); transition: opacity .9s var(--ease); pointer-events: none; }
+#blobs i { position: absolute; border-radius: 50%; filter: blur(50px); }
+#blobs .b1 { width: 340px; height: 340px; left: -40px; top: 60px; background: #F2A272; }
+#blobs .b2 { width: 300px; height: 300px; right: -60px; top: 330px; background: #E07A3F; opacity: .8; }
+#blobs .b3 { width: 320px; height: 320px; left: 20px; bottom: 40px; background: #C9A7E8; opacity: .7; }
+#blobs .b4 { width: 220px; height: 220px; right: 10px; top: -20px; background: #F6D2A6; }
+body.dark #blobs .b1 { background: #8A3E1C; }
+body.dark #blobs .b3 { background: #4B356E; }
+body.dark #blobs .b4 { background: #6A3A20; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border-radius: 20px;
+  transition: background-color .7s var(--ease), border-color .7s var(--ease), box-shadow .7s var(--ease);
+}
+
+.status { position: absolute; top: 0; left: 0; right: 0; height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 6px 30px 0 34px; font-weight: 600; font-size: 16px; z-index: 30; }
+.status svg { display: block; }
+.status .icons { display: flex; gap: 6px; align-items: center; }
+
+.screen { position: absolute; inset: 0; padding: 58px 18px 100px; transition: transform .55s var(--ease), opacity .45s var(--ease); }
+.screen.hidden { opacity: 0; pointer-events: none; transform: translateY(12px); }
+.screen.pushed-out { transform: translateX(-28%); opacity: .0; pointer-events: none; }
+.screen.push-wait { transform: translateX(100%); pointer-events: none; }
+
+.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: .14em; color: var(--sub); text-transform: uppercase; }
+h1 { font-size: 32px; line-height: 38px; letter-spacing: -.02em; margin: 4px 0 0; font-weight: 700; }
+.sub { font-size: 15px; color: var(--sub); margin-top: 4px; }
+
+/* week strip */
+.strip { display: flex; justify-content: space-between; margin: 18px 2px 14px; }
+.strip div { width: 44px; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 13px; color: var(--sub); }
+.strip b { width: 36px; height: 36px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; color: var(--ink); transition: color .7s; }
+.strip .on b { background: var(--accent); color: #fff; }
+
+/* rings */
+.ring { display: block; transform: rotate(-90deg); }
+.ring .t { stroke: var(--track); transition: stroke .7s; }
+.ring .v { stroke: var(--accent); stroke-linecap: round; transition: stroke-dashoffset .9s var(--ease); }
+
+/* today card */
+.today { padding: 16px 18px 6px; }
+.today-head { display: flex; align-items: center; }
+.today-head .title { font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+.today-head .meta { font-size: 14px; color: var(--sub); margin-top: 2px; transition: color .4s; }
+.today-head .meta.done { color: var(--accent); font-weight: 600; }
+.today-head .count { margin-left: auto; margin-right: 12px; font-size: 15px; font-variant-numeric: tabular-nums; color: var(--sub); }
+.task { display: flex; align-items: center; gap: 14px; height: 46px; font-size: 16px; border-top: 1px solid var(--line); transition: border-color .7s; }
+.task:first-of-type { margin-top: 10px; }
+.task .time { margin-left: auto; color: var(--sub); font-size: 15px; font-variant-numeric: tabular-nums; }
+.task.done .label { color: var(--sub); text-decoration: line-through; text-decoration-color: rgba(138,132,123,.6); }
+.box { width: 24px; height: 24px; border-radius: 7px; border: 1.8px solid #C9C1B6; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background-color .25s, border-color .25s, transform .3s var(--ease); }
+.box svg { opacity: 0; transform: scale(.4); transition: opacity .2s, transform .35s var(--ease); }
+.done .box { background: var(--accent); border-color: var(--accent); }
+.done .box svg { opacity: 1; transform: scale(1); }
+.box.pop { animation: pop .45s var(--ease); }
+@keyframes pop { 0% { transform: scale(.8); } 50% { transform: scale(1.18); } 100% { transform: scale(1); } }
+
+/* day rows */
+.days { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.day { display: flex; align-items: center; height: 58px; padding: 0 16px 0 18px; border-radius: 16px; }
+.day .n { font-size: 16px; font-weight: 700; }
+.day .d { font-size: 13px; color: var(--sub); margin-top: 2px; }
+.day .c { margin-left: auto; margin-right: 12px; font-size: 14px; color: var(--sub); font-variant-numeric: tabular-nums; }
+.chev { margin-left: 12px; color: var(--sub); }
+
+.intro > * { opacity: 0; transform: translateY(16px); }
+.intro.play > * { animation: rise .9s var(--ease) forwards; }
+@keyframes rise { to { opacity: 1; transform: none; } }
+
+/* day view */
+.back { display: flex; align-items: center; gap: 4px; color: var(--accent); font-size: 16px; font-weight: 500; height: 30px; }
+.fit { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; transition: opacity .4s, max-height .5s var(--ease); max-height: 80px; overflow: hidden; }
+.fit span { font-size: 14px; padding: 8px 12px; border-radius: 12px; background: var(--card-2); transition: background-color .7s; }
+.fit.gone { opacity: 0; max-height: 0; }
+.timeline { position: relative; margin-top: 14px; height: 470px; padding: 0; }
+.hour { position: absolute; left: 14px; right: 14px; display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--sub); }
+.hour i { flex: 1; height: 1px; background: var(--line); }
+.ev { position: absolute; left: 66px; right: 14px; border-radius: 10px; padding: 7px 10px; font-size: 14px; font-weight: 600; overflow: hidden; transition: transform .6s var(--ease), opacity .5s var(--ease); }
+.ev small { display: block; font-weight: 400; font-size: 12.5px; opacity: .75; margin-top: 1px; }
+.ev.meet { background: color-mix(in srgb, var(--c) 16%, transparent); border-left: 3px solid var(--c); }
+.ev.block { background: var(--accent); color: #fff; box-shadow: 0 6px 16px rgba(224,122,63,.3); }
+.ev.block.pending { opacity: 0; transform: translateX(40px) scale(.96); }
+.primary { width: 100%; height: 52px; border-radius: 16px; background: var(--accent); color: #fff; font-size: 17px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform .2s var(--ease), background-color .4s; }
+.primary:active { transform: scale(.97); }
+.primary.ok { background: var(--card-2); color: var(--ink); }
+#block-btn { position: absolute; left: 18px; right: 18px; bottom: 100px; width: auto; }
+
+/* sheet */
+.scrim { position: absolute; inset: 0; background: rgba(15,12,10,.28); opacity: 0; pointer-events: none; transition: opacity .45s var(--ease); z-index: 40; }
+.scrim.on { opacity: 1; pointer-events: auto; }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; padding: 12px 20px 34px; border-radius: 28px 28px 0 0; background: var(--bg); transform: translateY(105%); transition: transform .55s var(--ease), background-color .7s; z-index: 41; box-shadow: 0 -10px 40px rgba(0,0,0,.12); }
+.sheet.on { transform: none; }
+.grab { width: 40px; height: 5px; border-radius: 3px; background: var(--track); margin: 0 auto 16px; }
+.sheet h2 { font-size: 22px; margin: 0; letter-spacing: -.01em; }
+.sheet .sub { margin-bottom: 14px; }
+.plan { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px; background: var(--card); margin-bottom: 8px; font-size: 16px; }
+.plan .dot { width: 10px; height: 10px; border-radius: 5px; background: var(--accent); }
+.plan .when { margin-left: auto; font-size: 14px; color: var(--sub); font-variant-numeric: tabular-nums; }
+.sheet .row { display: flex; gap: 10px; margin-top: 14px; }
+.sheet .ghost { flex: 0 0 120px; height: 52px; border-radius: 16px; background: var(--card-2); font-size: 17px; font-weight: 600; }
+
+/* inbox */
+.dump { margin-top: 16px; padding: 16px 18px; height: 168px; font-size: 18px; line-height: 27px; position: relative; }
+.dump .ph { color: var(--sub); }
+.dump .caret { display: inline-block; width: 2px; height: 22px; background: var(--accent); vertical-align: -4px; margin-left: 1px; animation: blink 1s steps(1) infinite; }
+.dump.idle .caret { display: none; }
+@keyframes blink { 50% { opacity: 0; } }
+#organise { margin-top: 12px; }
+#organise.working { background: linear-gradient(90deg, var(--accent) 0%, #EFA06E 50%, var(--accent) 100%); background-size: 200% 100%; animation: shimmer 1s linear infinite; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+.results { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.item { display: flex; align-items: center; gap: 12px; padding: 0 14px; height: 52px; border-radius: 16px; font-size: 16px; opacity: 0; transform: translateY(14px) scale(.98); transition: opacity .5s var(--ease), transform .6s var(--ease); }
+.item.in { opacity: 1; transform: none; }
+.item .tag { margin-left: auto; font-size: 13px; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 5px 9px; border-radius: 9px; white-space: nowrap; transition: background-color .7s; }
+.item .ic { width: 22px; height: 22px; border-radius: 11px; border: 1.8px solid #C9C1B6; flex-shrink: 0; }
+.added .item .ic { background: var(--accent); border-color: var(--accent); }
+
+.toast { position: absolute; left: 50%; bottom: 104px; transform: translate(-50%, 20px); opacity: 0; background: var(--ink); color: var(--bg); padding: 13px 20px; border-radius: 22px; font-size: 15px; font-weight: 600; white-space: nowrap; transition: opacity .4s var(--ease), transform .5s var(--ease); z-index: 50; display: flex; gap: 8px; align-items: center; }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+/* settings */
+.group { margin-top: 16px; padding: 4px 0; }
+.sec-label { font-size: 13px; font-weight: 600; letter-spacing: .1em; color: var(--sub); margin: 22px 4px 8px; text-transform: uppercase; }
+.row-s { display: flex; align-items: center; min-height: 58px; padding: 0 16px; font-size: 16px; border-top: 1px solid var(--line); transition: border-color .7s; }
+.row-s:first-child { border-top: 0; }
+.row-s .v { margin-left: auto; color: var(--sub); }
+.pro-row { min-height: 76px; }
+.pro-row .t { font-weight: 700; font-size: 17px; display: flex; align-items: center; gap: 8px; }
+.pro-row .d { font-size: 13.5px; color: var(--sub); margin-top: 3px; }
+.badge { font-size: 11px; font-weight: 700; letter-spacing: .08em; color: var(--accent); background: var(--accent-soft); padding: 3px 7px; border-radius: 7px; transition: background-color .7s; }
+.switch { margin-left: auto; width: 52px; height: 32px; border-radius: 16px; background: var(--track); position: relative; transition: background-color .35s var(--ease); flex-shrink: 0; }
+.switch::after { content: ''; position: absolute; left: 3px; top: 3px; width: 26px; height: 26px; border-radius: 13px; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.18); transition: transform .4s var(--ease); }
+.switch.on { background: var(--accent); }
+.switch.on::after { transform: translateX(20px); }
+.pro-only { max-height: 0; opacity: 0; overflow: hidden; transition: max-height .6s var(--ease), opacity .5s var(--ease); }
+.pro-only.on { max-height: 260px; opacity: 1; }
+.seg { display: flex; padding: 4px; border-radius: 14px; background: var(--card-2); margin: 0 0 4px; position: relative; transition: background-color .7s; }
+.seg button { flex: 1; height: 40px; border-radius: 11px; font-size: 14.5px; font-weight: 600; position: relative; z-index: 1; color: var(--sub); transition: color .3s; }
+.seg button.on { color: var(--ink); }
+.seg .knob { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc((100% - 8px) / 3); border-radius: 11px; background: var(--card); box-shadow: 0 2px 8px rgba(0,0,0,.08); transition: transform .45s var(--ease), background-color .7s; }
+.preview { display: flex; gap: 8px; margin-top: 10px; }
+.preview div { flex: 1; height: 44px; border-radius: 12px; }
+
+/* tab bar */
+.tabs { position: absolute; left: 0; right: 0; bottom: 0; height: 86px; display: flex; justify-content: space-around; padding-top: 10px; z-index: 35; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--line); transition: background-color .7s, border-color .7s; }
+.tabs button { width: 76px; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 500; color: var(--sub); transition: color .3s; }
+.tabs button.on { color: var(--accent); font-weight: 600; }
+.home-ind { position: absolute; bottom: 8px; left: 50%; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: var(--ink); opacity: .85; z-index: 60; transition: background-color .7s; }
+</style>
+</head>
+<body>
+<div id="blobs"><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i></div>
+
+<div class="status">
+  <span>9:41</span>
+  <span class="icons">
+    <svg width="18" height="11" viewBox="0 0 18 11"><g fill="currentColor"><rect x="0" y="8" width="3" height="3" rx=".8"/><rect x="4.8" y="5.4" width="3" height="5.6" rx=".8"/><rect x="9.6" y="2.8" width="3" height="8.2" rx=".8"/><rect x="14.4" y="0" width="3" height="11" rx=".8"/></g></svg>
+    <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M8 11 5.6 8.4a3.4 3.4 0 0 1 4.8 0Z" fill="currentColor" stroke="none"/><path d="M3.6 6.4a6.2 6.2 0 0 1 8.8 0M1.2 3.9a9.6 9.6 0 0 1 13.6 0"/></svg>
+    <svg width="26" height="12" viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3.2" fill="none" stroke="currentColor" stroke-opacity=".45"/><rect x="2.2" y="2.2" width="16" height="7.6" rx="1.8" fill="currentColor"/><rect x="23.6" y="4" width="1.6" height="4" rx=".8" fill="currentColor" fill-opacity=".45"/></svg>
+  </span>
+</div>
+
+<!-- WEEK -->
+<section class="screen" id="screen-week">
+  <div class="intro" id="week-intro">
+    <div>
+      <div class="eyebrow">Nov 2 – Nov 8</div>
+      <h1>This week</h1>
+    </div>
+    <div class="strip" id="strip"></div>
+    <div class="card today" id="today-card">
+      <div class="today-head">
+        <div>
+          <div class="title">Today</div>
+          <div class="meta" id="today-meta">Monday · 2 left</div>
+        </div>
+        <span class="count" id="today-count">2 / 4</span>
+        <svg class="ring" width="40" height="40" viewBox="0 0 40 40"><circle class="t" cx="20" cy="20" r="16" fill="none" stroke-width="4.5"/><circle class="v" id="today-ring" cx="20" cy="20" r="16" fill="none" stroke-width="4.5"/></svg>
+      </div>
+      <div id="today-tasks"></div>
+    </div>
+    <div class="days" id="days"></div>
+  </div>
+</section>
+
+<!-- DAY -->
+<section class="screen push-wait" id="screen-day">
+  <button class="back" id="day-back"><svg width="12" height="20" viewBox="0 0 12 20"><path d="M10 2 2 10l8 8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Week</button>
+  <div class="eyebrow" style="margin-top:6px">Tuesday · 3 November</div>
+  <h1>Your day</h1>
+  <div class="fit" id="fit"><span>Write proposal · 2h</span><span>Review budget · 45m</span><span>Gym · 1h</span></div>
+  <div class="timeline card" id="timeline"></div>
+  <button class="primary" id="block-btn"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2c1 6 4 9 10 10-6 1-9 4-10 10-1-6-4-9-10-10 6-1 9-4 10-10Z" fill="#fff"/></svg><span>Block my day</span></button>
+</section>
+
+<!-- INBOX -->
+<section class="screen hidden" id="screen-inbox">
+  <div class="eyebrow">Inbox</div>
+  <h1>Brain dump</h1>
+  <div class="sub">Type it messy. We’ll sort it.</div>
+  <div class="card dump idle" id="dump"><span class="ph" id="dump-ph">Everything on your mind…</span><span id="dump-text"></span><span class="caret"></span></div>
+  <button class="primary" id="organise"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2c1 6 4 9 10 10-6 1-9 4-10 10-1-6-4-9-10-10 6-1 9-4 10-10Z" fill="#fff"/></svg><span>Organise</span></button>
+  <div class="results" id="results"></div>
+  <button class="primary" id="add-all" style="margin-top:12px; opacity:0; pointer-events:none; transition: opacity .5s">Add 5 to my week</button>
+</section>
+
+<!-- SETTINGS -->
+<section class="screen hidden" id="screen-settings">
+  <div class="eyebrow">Plainweek</div>
+  <h1>Settings</h1>
+  <div class="card group">
+    <div class="row-s pro-row">
+      <div><div class="t">Plainweek Pro <span class="badge">PRO</span></div><div class="d">Smart blocking, brain dump, glass styles</div></div>
+      <button class="switch" id="pro-switch" aria-label="Pro"></button>
+    </div>
+  </div>
+  <div class="pro-only" id="pro-only">
+    <div class="sec-label">Surface style</div>
+    <div class="seg" id="seg">
+      <span class="knob" id="knob"></span>
+      <button class="on" data-style="matte" id="style-matte">Matte</button>
+      <button data-style="soft" id="style-soft">Soft Glass</button>
+      <button data-style="full" id="style-full">Full Glass</button>
+    </div>
+  </div>
+  <div class="sec-label">Appearance</div>
+  <div class="card group" style="margin-top:0">
+    <div class="row-s">Dark mode<button class="switch" id="dark-switch" aria-label="Dark mode"></button></div>
+    <div class="row-s">Week starts on<span class="v">Monday</span></div>
+    <div class="row-s">Daily review<span class="v">8:00 PM</span></div>
+  </div>
+</section>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet">
+  <div class="grab"></div>
+  <h2>Suggested plan</h2>
+  <div class="sub">Fitted around your 3 meetings</div>
+  <div class="plan card"><span class="dot"></span>Write proposal<span class="when">10:00 – 12:00</span></div>
+  <div class="plan card"><span class="dot"></span>Review budget<span class="when">13:15 – 14:00</span></div>
+  <div class="plan card"><span class="dot"></span>Gym<span class="when">16:30 – 17:30</span></div>
+  <div class="row"><button class="ghost" id="plan-cancel">Cancel</button><button class="primary" id="plan-apply">Apply</button></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<nav class="tabs">
+  <button class="on" id="tab-week" data-tab="week"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke-linecap="round"/></svg>Week</button>
+  <button id="tab-inbox" data-tab="inbox"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 13.5 6.5 5h11l2.5 8.5V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Z"/><path d="M4 13.5h4.5l1 2.5h5l1-2.5H20"/></svg>Inbox</button>
+  <button id="tab-stats" data-tab="week"><svg width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 20v-7M12 20V5M18 20v-10"/></svg>Stats</button>
+  <button id="tab-settings" data-tab="settings"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.5-2-3.4-2.4.9a7.5 7.5 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.5A7.5 7.5 0 0 0 7 6.5l-2.4-.9-2 3.4 2 1.5a7.6 7.6 0 0 0 0 3l-2 1.5 2 3.4 2.4-.9a7.5 7.5 0 0 0 2.6 1.5l.4 2.5h4l.4-2.5a7.5 7.5 0 0 0 2.6-1.5l2.4.9 2-3.4Z" stroke-linejoin="round"/></svg>Settings</button>
+</nav>
+<div class="home-ind"></div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const CHECK = '<svg width="14" height="14" viewBox="0 0 12 12"><path d="M2.5 6.4 5 8.8l4.6-5.2" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const CHEV = '<svg class="chev" width="8" height="14" viewBox="0 0 8 14"><path d="m1.5 1.5 5 5.5-5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const ring = (size, r, sw, id) => `<svg class="ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle class="t" cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke-width="${sw}"/><circle class="v" ${id ? `id="${id}"` : ''} cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke-width="${sw}"/></svg>`;
+function setRing(el, value) {
+  const r = +el.getAttribute('r');
+  const c = 2 * Math.PI * r;
+  el.style.strokeDasharray = c;
+  el.style.strokeDashoffset = c * (1 - value);
+}
+
+// ---- week ----
+const STRIP = [['Mon', 2], ['Tue', 3], ['Wed', 4], ['Thu', 5], ['Fri', 6], ['Sat', 7], ['Sun', 8]];
+$('#strip').innerHTML = STRIP.map(([d, n], i) => `<div class="${i === 0 ? 'on' : ''}">${d}<b>${n}</b></div>`).join('');
+const TODAY = [
+  {t: 'Morning run', time: '07:00', done: true},
+  {t: 'Plan the week', time: '08:30', done: true},
+  {t: 'Reply to Sam', time: '11:00', done: false},
+  {t: 'Send invoice', time: '16:00', done: false},
+];
+$('#today-tasks').innerHTML = TODAY.map((x, i) =>
+  `<div class="task ${x.done ? 'done' : ''}" id="task-${i}"><span class="box" id="check-${i}">${CHECK}</span><span class="label">${x.t}</span><span class="time">${x.time}</span></div>`).join('');
+const DAYS = [['Tuesday', '3 November', 0, 3], ['Wednesday', '4 November', 1, 5], ['Thursday', '5 November', 0, 2], ['Friday', '6 November', 0, 4], ['Saturday', '7 November', 0, 2]];
+$('#days').innerHTML = DAYS.map(([n, d, a, b], i) =>
+  `<div class="card day" id="day-${i}"><div><div class="n">${n}</div><div class="d">${d}</div></div><span class="c" id="day-${i}-count">${a} / ${b}</span>${ring(28, 11, 3.4, `day-${i}-ring`)}${CHEV}</div>`).join('');
+DAYS.forEach(([, , a, b], i) => setRing($(`#day-${i}-ring`), a / b));
+
+function updateToday() {
+  const done = TODAY.filter((x) => x.done).length;
+  $('#today-count').textContent = `${done} / 4`;
+  setRing($('#today-ring'), done / 4);
+  const meta = $('#today-meta');
+  meta.textContent = done === 4 ? 'All done. Nice work.' : `Monday · ${4 - done} left`;
+  meta.classList.toggle('done', done === 4);
+}
+updateToday();
+TODAY.forEach((x, i) => $(`#task-${i}`).addEventListener('click', () => {
+  x.done = !x.done;
+  $(`#task-${i}`).classList.toggle('done', x.done);
+  const box = $(`#check-${i}`);
+  box.classList.remove('pop'); void box.offsetWidth; box.classList.add('pop');
+  updateToday();
+}));
+
+// ---- navigation ----
+let current = 'week';
+const screens = {week: $('#screen-week'), day: $('#screen-day'), inbox: $('#screen-inbox'), settings: $('#screen-settings')};
+function showTab(name) {
+  if (name === current) return;
+  Object.entries(screens).forEach(([k, el]) => {
+    if (k === 'day') { el.classList.add('push-wait'); el.classList.remove('pushed-out'); return; }
+    el.classList.remove('pushed-out');
+    el.classList.toggle('hidden', k !== name);
+  });
+  document.querySelectorAll('.tabs button').forEach((b) => b.classList.toggle('on', b.id === `tab-${name}`));
+  current = name;
+}
+document.querySelectorAll('.tabs button').forEach((b) => b.addEventListener('click', () => {
+  document.querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('on', x === b));
+  const t = b.dataset.tab;
+  if (t !== current) showTab(t);
+}));
+$('#day-0').addEventListener('click', () => {
+  screens.week.classList.add('pushed-out');
+  screens.day.classList.remove('push-wait');
+  current = 'day';
+});
+$('#day-back').addEventListener('click', () => {
+  screens.week.classList.remove('pushed-out');
+  screens.day.classList.add('push-wait');
+  current = 'week';
+});
+
+// ---- day timeline ----
+const HOUR_H = 44, START = 8;
+const y = (h) => 14 + (h - START) * HOUR_H;
+let tl = '';
+for (let h = START; h <= 18; h++) tl += `<div class="hour" style="top:${y(h) - 7}px"><span style="width:40px">${String(h).padStart(2, '0')}:00</span><i></i></div>`;
+const MEETINGS = [[9, 10, 'Design sync', 'Zoom', '#5B8DEF'], [12, 13, 'Lunch with Ana', 'Café Nord', '#3FAE6E'], [14.5, 15.25, 'Client call', 'Online', '#8E6CE8']];
+MEETINGS.forEach(([a, b, t, m, c]) => tl += `<div class="ev meet" style="--c:${c}; top:${y(a) + 2}px; height:${(b - a) * HOUR_H - 4}px">${t}<small>${m}</small></div>`);
+const BLOCKS = [[10, 12, 'Write proposal', 'Focus · 2h'], [13.25, 14, 'Review budget', '45 min'], [16.5, 17.5, 'Gym', '1h']];
+BLOCKS.forEach(([a, b, t, m], i) => tl += `<div class="ev block pending" id="block-${i}" style="top:${y(a) + 2}px; height:${(b - a) * HOUR_H - 4}px">${t}<small>${m}</small></div>`);
+$('#timeline').innerHTML = tl;
+
+const sheetOpen = (on) => { $('#sheet').classList.toggle('on', on); $('#scrim').classList.toggle('on', on); };
+$('#block-btn').addEventListener('click', () => sheetOpen(true));
+$('#plan-cancel').addEventListener('click', () => sheetOpen(false));
+$('#scrim').addEventListener('click', () => sheetOpen(false));
+$('#plan-apply').addEventListener('click', () => {
+  sheetOpen(false);
+  $('#fit').classList.add('gone');
+  BLOCKS.forEach((_, i) => setTimeout(() => $(`#block-${i}`).classList.remove('pending'), 260 + i * 160));
+  const btn = $('#block-btn');
+  btn.classList.add('ok');
+  btn.innerHTML = `<span style="color:var(--accent)">✓</span><span>Day blocked · 3 tasks fitted</span>`;
+  $('#day-0-count').textContent = '0 / 3';
+});
+
+// ---- brain dump ----
+const dumpText = $('#dump-text');
+$('#dump').addEventListener('click', () => { $('#dump').classList.remove('idle'); });
+window.addEventListener('keydown', (e) => {
+  if (current !== 'inbox' || $('#dump').classList.contains('idle')) return;
+  $('#dump-ph').style.display = 'none';
+  if (e.key === 'Backspace') dumpText.textContent = dumpText.textContent.slice(0, -1);
+  else if (e.key.length === 1) dumpText.textContent += e.key;
+});
+const PARSED = [['Call Mum', 'Sun'], ['Dentist', 'Thu · 15:00'], ['Finish the deck', 'Due Fri'], ['Gym', 'Tue & Thu'], ['Buy milk', 'Today']];
+$('#organise').addEventListener('click', () => {
+  const btn = $('#organise');
+  btn.classList.add('working');
+  btn.querySelector('span').textContent = 'Organising…';
+  $('#dump').classList.add('idle');
+  setTimeout(() => {
+    btn.classList.remove('working');
+    btn.querySelector('span').textContent = '5 tasks found';
+    $('#results').innerHTML = PARSED.map(([t, tag], i) => `<div class="card item" id="item-${i}"><span class="ic"></span>${t}<span class="tag">${tag}</span></div>`).join('');
+    PARSED.forEach((_, i) => setTimeout(() => $(`#item-${i}`).classList.add('in'), 40 + i * 110));
+    setTimeout(() => { const a = $('#add-all'); a.style.opacity = 1; a.style.pointerEvents = 'auto'; }, 700);
+  }, 650);
+});
+function toast(msg) {
+  const t = $('#toast');
+  t.innerHTML = msg;
+  t.classList.add('on');
+  setTimeout(() => t.classList.remove('on'), 1600);
+}
+$('#add-all').addEventListener('click', () => {
+  $('#results').classList.add('added');
+  $('#add-all').textContent = 'Added to your week ✓';
+  $('#add-all').classList.add('ok');
+  toast('<span style="color:var(--accent)">●</span> 5 tasks added to your week');
+});
+
+// ---- settings ----
+$('#pro-switch').addEventListener('click', () => {
+  const on = $('#pro-switch').classList.toggle('on');
+  $('#pro-only').classList.toggle('on', on);
+});
+document.querySelectorAll('#seg button').forEach((b, i) => b.addEventListener('click', () => {
+  document.querySelectorAll('#seg button').forEach((x) => x.classList.toggle('on', x === b));
+  $('#knob').style.transform = `translateX(${i * 100}%)`;
+  document.body.classList.remove('glass-soft', 'glass-full');
+  if (b.dataset.style !== 'matte') document.body.classList.add(`glass-${b.dataset.style}`);
+}));
+$('#dark-switch').addEventListener('click', () => {
+  const on = $('#dark-switch').classList.toggle('on');
+  document.body.classList.toggle('dark', on);
+});
+
+// entrance animation; the recorder calls playIntro() once capture starts
+window.playIntro = () => {
+  const intro = $('#week-intro');
+  [...intro.children].forEach((c, i) => (c.style.animationDelay = `${0.1 + i * 0.14}s`));
+  intro.classList.add('play');
+  const ringEl = $('#today-ring');
+  setRing(ringEl, 0);
+  DAYS.forEach((_, i) => setRing($(`#day-${i}-ring`), 0));
+  requestAnimationFrame(() => setTimeout(() => {
+    updateToday();
+    DAYS.forEach(([, , a, b], i) => setRing($(`#day-${i}-ring`), a / b));
+  }, 500));
+};
+if (!/[?&]record/.test(location.search)) window.playIntro();
+</script>
+</body>
+</html>

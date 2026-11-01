@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Plainweek reel wrapper</title>
+<style>
+@font-face { font-family: Inter; font-weight: 400; src: url(../assets/fonts/inter-latin-400-normal.woff2) format('woff2'); }
+@font-face { font-family: Inter; font-weight: 500; src: url(../assets/fonts/inter-latin-500-normal.woff2) format('woff2'); }
+@font-face { font-family: Inter; font-weight: 600; src: url(../assets/fonts/inter-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: Inter; font-weight: 700; src: url(../assets/fonts/inter-latin-700-normal.woff2) format('woff2'); }
+:root { --ink: #1F1D1A; --sub: #7D766D; --accent: #E07A3F; --cream: #FBF6EE; }
+* { box-sizing: border-box; }
+html, body { margin: 0; overflow: hidden; }
+body { font-family: Inter, sans-serif; -webkit-font-smoothing: antialiased; color: var(--ink); }
+#stage { position: relative; overflow: hidden; background: var(--cream); }
+.bg { position: absolute; inset: 0; background: linear-gradient(180deg, #FCF8F2 0%, #FAF0E4 38%, #F6DCC4 70%, #EFB48A 92%, #E8996A 100%); }
+.glow { position: absolute; border-radius: 50%; filter: blur(80px); }
+.glow.a { width: 900px; height: 900px; left: 50%; margin-left: -450px; bottom: -420px; background: rgba(224,122,63,.45); }
+.glow.b { width: 600px; height: 600px; left: -200px; top: -160px; background: rgba(255,255,255,.7); }
+
+#phone { position: absolute; border-radius: 88px; padding: 13px; background: linear-gradient(150deg, #3A3633, #171513 45%, #2C2926); box-shadow: 0 70px 140px -40px rgba(122,58,20,.45), 0 30px 60px -20px rgba(60,30,10,.25), inset 0 0 0 1.5px rgba(255,255,255,.14); }
+#screen { display: block; border-radius: 75px; width: 100%; height: 100%; object-fit: cover; background: #FAF7F2; }
+
+.cap { position: absolute; font-weight: 700; letter-spacing: -0.03em; }
+.cap div { will-change: transform, opacity, filter; }
+.cap .accent { color: var(--accent); }
+
+#end { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--cream); opacity: 0; }
+#end .mark { width: 168px; height: 168px; border-radius: 44px; background: var(--accent); display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 60px -20px rgba(224,122,63,.55); }
+#end .name { font-size: 132px; font-weight: 700; letter-spacing: -0.045em; margin-top: 52px; }
+#end .tag { font-size: 46px; font-weight: 500; color: var(--sub); letter-spacing: -0.015em; line-height: 1.3; text-align: center; margin-top: 18px; }
+
+/* landscape */
+body.landscape #phone { border-radius: 64px; padding: 10px; }
+body.landscape #screen { border-radius: 54px; }
+body.landscape .glow.a { left: 70%; bottom: -520px; }
+body.landscape #end .name { font-size: 120px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="bg"></div>
+  <div class="glow b"></div>
+  <div class="glow a"></div>
+  <div id="phone"><img id="screen" alt=""></div>
+  <div id="caps"></div>
+  <div id="end">
+    <div class="mark">
+      <svg width="96" height="96" viewBox="0 0 96 96"><circle cx="48" cy="48" r="32" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="11"/><circle id="mark-ring" cx="48" cy="48" r="32" fill="none" stroke="#fff" stroke-width="11" stroke-linecap="round" transform="rotate(-90 48 48)" stroke-dasharray="201.06" stroke-dashoffset="201.06"/></svg>
+    </div>
+    <div class="name">Plainweek</div>
+    <div class="tag" id="tag"></div>
+  </div>
+</div>
+<script>
+const params = new URLSearchParams(location.search);
+const LAND = params.get('layout') === 'landscape';
+const W = LAND ? 1920 : 1080, H = LAND ? 1080 : 1920;
+const REC = params.get('rec') || '../out/rec/cfr';
+const FPS = 30;
+const REC_FRAMES = +(params.get('frames') || 559);
+document.body.classList.toggle('landscape', LAND);
+const stage = document.getElementById('stage');
+stage.style.width = W + 'px';
+stage.style.height = H + 'px';
+
+// Phone geometry: screen keeps the 390:844 viewport ratio.
+const phone = document.getElementById('phone');
+const P = LAND
+  ? {w: 456, x: 1188, y: 66}
+  : {w: 664, x: (1080 - 664) / 2, y: 452};
+const pad = LAND ? 10 : 13;
+P.h = (P.w - pad * 2) * (844 / 390) + pad * 2;
+Object.assign(phone.style, {left: P.x + 'px', top: P.y + 'px', width: P.w + 'px', height: P.h + 'px'});
+
+const CAPTIONS = [
+  {from: 0.45, to: 3.85, lines: ['Your whole week.', '<span class="accent">One calm view.</span>']},
+  {from: 4.15, to: 8.85, lines: ['Tasks fitted around', '<span class="accent">your meetings.</span>']},
+  {from: 9.15, to: 13.85, lines: ['Empty your head.', '<span class="accent">Plainweek sorts it out.</span>']},
+  {from: 14.15, to: 17.8, lines: ['Soft. Rounded.', '<span class="accent">Yours.</span>']},
+];
+const capsEl = document.getElementById('caps');
+CAPTIONS.forEach((c) => {
+  const el = document.createElement('div');
+  el.className = 'cap';
+  if (LAND) Object.assign(el.style, {left: '150px', top: '0', height: H + 'px', width: '960px', display: 'flex', flexDirection: 'column', justifyContent: 'center', fontSize: '92px', lineHeight: '106px'});
+  else Object.assign(el.style, {left: '60px', right: '60px', top: '150px', textAlign: 'center', fontSize: '74px', lineHeight: '88px'});
+  el.innerHTML = c.lines.map((l) => `<div>${l}</div>`).join('');
+  capsEl.appendChild(el);
+  c.el = el;
+});
+const TAG = LAND ? ['Spend less time planning. Get more done.'] : ['Spend less time planning.', 'Get more done.'];
+document.getElementById('tag').innerHTML = TAG.join('<br>');
+
+const clamp = (v) => Math.max(0, Math.min(1, v));
+const easeOut = (x) => 1 - Math.pow(1 - x, 4);
+const easeInOut = (x) => (x < 0.5 ? 8 * x ** 4 : 1 - Math.pow(-2 * x + 2, 4) / 2);
+const p = (t, a, d, e = easeOut) => e(clamp((t - a) / d));
+
+const img = document.getElementById('screen');
+let lastSrc = '';
+
+window.renderAt = async (t) => {
+  // recording frame
+  const idx = Math.min(REC_FRAMES - 1, Math.max(0, Math.round(t * FPS)));
+  const src = `${REC}/c${String(idx).padStart(4, '0')}.jpg`;
+  if (src !== lastSrc) {
+    img.src = src;
+    await img.decode();
+    lastSrc = src;
+  }
+  // phone entrance + exit
+  const enter = p(t, 0, 1.1);
+  const exit = p(t, 17.85, 0.7, easeInOut);
+  phone.style.transform = `translateY(${(1 - enter) * 90 + exit * 40}px) scale(${(0.96 + 0.04 * enter) * (1 - exit * 0.05)})`;
+  phone.style.opacity = enter * (1 - exit);
+
+  // captions: rise + unblur in, drift up + fade out
+  CAPTIONS.forEach((c) => {
+    const out = p(t, c.to - 0.45, 0.45, easeInOut);
+    [...c.el.children].forEach((line, i) => {
+      const a = p(t, c.from + i * 0.14, 0.75);
+      line.style.opacity = a * (1 - out);
+      line.style.transform = `translateY(${(1 - a) * 34 - out * 18}px)`;
+      line.style.filter = `blur(${(1 - a) * 10 + out * 6}px)`;
+    });
+    c.el.style.visibility = t < c.from - 0.05 || t > c.to + 0.05 ? 'hidden' : 'visible';
+  });
+
+  // end card
+  const end = document.getElementById('end');
+  const e = p(t, 17.95, 0.6, easeInOut);
+  end.style.opacity = e;
+  const mark = end.querySelector('.mark');
+  const m = p(t, 18.15, 0.8);
+  mark.style.transform = `scale(${0.8 + 0.2 * m})`;
+  mark.style.opacity = m;
+  document.getElementById('mark-ring').setAttribute('stroke-dashoffset', 201.06 * (1 - 0.78 * p(t, 18.3, 1.1)));
+  const nm = p(t, 18.3, 0.8);
+  end.querySelector('.name').style.cssText += `;opacity:${nm};transform:translateY(${(1 - nm) * 26}px)`;
+  const tg = p(t, 18.55, 0.8);
+  end.querySelector('.tag').style.cssText += `;opacity:${tg};transform:translateY(${(1 - tg) * 20}px)`;
+};
+window.ready = document.fonts.ready.then(() => window.renderAt(0));
+</script>
+</body>
+</html>
