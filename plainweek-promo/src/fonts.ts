@@ -7,6 +7,10 @@ const faces: [string, string, string, string][] = [
   ['Inter', 'inter-latin-700-normal.woff2', '700', 'normal'],
   ['Instrument Serif', 'instrument-serif-latin-400-normal.woff2', '400', 'normal'],
   ['Instrument Serif', 'instrument-serif-latin-400-italic.woff2', '400', 'italic'],
+  ['Inter Display', 'InterDisplay-Light.otf', '300', 'normal'],
+  ['Inter Display', 'InterDisplay-Medium.otf', '500', 'normal'],
+  ['Inter Display', 'InterDisplay-SemiBold.otf', '600', 'normal'],
+  ['Inter Display', 'InterDisplay-Bold.otf', '700', 'normal'],
 ];
 
 let loaded = false;
@@ -17,7 +21,8 @@ export const loadFonts = () => {
   const handle = delayRender('Loading fonts');
   Promise.all(
     faces.map(([family, file, weight, style]) => {
-      const face = new FontFace(family, `url(${staticFile(`fonts/${file}`)}) format('woff2')`, {weight, style});
+      const format = file.endsWith('.otf') ? 'opentype' : 'woff2';
+      const face = new FontFace(family, `url(${staticFile(`fonts/${file}`)}) format('${format}')`, {weight, style});
       return face.load().then((f) => document.fonts.add(f));
     }),
   )
