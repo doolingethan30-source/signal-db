@@ -63,3 +63,10 @@ Rendered file: `out/plainweek-launch.mp4` (H.264 High, yuv420p, AAC, +faststart,
 - The music ducks about 6 dB under each line, with smooth 0.25 s ramps.
 - The hero shot holds 2.5 s longer, so the full tagline isn't rushed, and each tagline line appears as it's spoken.
 - The original 30 s cut with no voice-over is still at `out/plainweek-launch.mp4`.
+
+### Punchier cut (current `out/plainweek-launch-vo.mp4`)
+- **Hook:** the screen is full of clutter from frame 0. "Your week / shouldn't feel / this loud." lands word by word with the voice-over, with a punch on "loud."
+- **Bigger phone:** the phone runs at 1.2–1.5× with a fast snap move into each feature shot, a slow push-in while the feature plays, and motion blur on the snaps.
+- **Titles:** each word slides up out of a mask, with the key word in the accent colour.
+- **Score:** a soft kick from the reveal, shakers and snaps building through the features, and a gentle pad pump. It drops out for "Light. Dark. Glass." before the hero chord.
+- **Sound effects:** only five remain (the typed-task confirmation, the drop, two widget ticks and the re-plan shimmer).

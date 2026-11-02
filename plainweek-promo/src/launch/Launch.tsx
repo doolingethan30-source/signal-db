@@ -7,13 +7,13 @@ import {FloatingWidgets} from './scenes/FloatingWidgets';
 import {HeroText} from './scenes/Hero';
 import {Stage} from './scenes/Stage';
 import {Titles} from './scenes/Titles';
-import {Day, PER_CHAR, RETURN_AT, TYPE_START, TYPED} from './screens/Day';
+import {Day, RETURN_AT} from './screens/Day';
 import {Home, HOME_TICKS} from './screens/Home';
-import {BLOCK_TAP, NOTIFY, REPLAN_TAP, Timeline} from './screens/Timeline';
+import {REPLAN_TAP, Timeline} from './screens/Timeline';
 import {rowY, Week, weekData} from './screens/Week';
 import {FPS} from '../theme';
 import {L, LIGHT_THEME, theme, UI} from './theme';
-import {darkAt, DARK_IN, glassAt, GLASS_IN} from './timeline';
+import {darkAt, glassAt} from './timeline';
 import {VO_LINES} from './voTimeline';
 import {Box} from './ui';
 
@@ -26,23 +26,25 @@ const PHONE_Y = 520;
 // ---------- camera: keyframed phone poses ----------
 type Pose = {y: number; x: number; s: number; rx: number; ry: number};
 const P = (y: number, s: number, rx: number, ry: number, x = 0): Pose => ({y, x, s, rx, ry});
+// Bigger phone, quick "snap" moves between shots (8–12 frames) and slow push-ins
+// while each feature plays, so the UI reads clearly on a phone screen.
 const KEYS: [number, Pose][] = [
-  [122, P(1050, 0.86, 34, -24)],
-  [184, P(0, 1, 7, -13)],
-  [246, P(0, 1, 2, -5)],
-  [266, P(70, 1.16, 0, 0)],
-  [338, P(70, 1.16, 0, 0)],
-  [358, P(0, 1, 4, 9)],
-  [430, P(0, 1, 3, 6)],
-  [452, P(30, 1.08, 3, -7)],
-  [530, P(30, 1.08, 2, -4)],
-  [548, P(10, 1.12, 2, 0)],
-  [612, P(10, 1.1, 0, 2)],
-  [632, P(40, 0.88, 0, 0)],
-  [714, P(40, 0.88, 0, 0)],
-  [734, P(0, 1, 6, -16)],
-  [812, P(0, 1, 6, 14)],
-  [850, P(175, 0.8, 10, -20)],
+  [118, P(1000, 1.0, 30, -20)],
+  [170, P(-10, 1.22, 4, -8)],
+  [244, P(-10, 1.27, 2, -3)],
+  [254, P(110, 1.48, 0, 0)],
+  [340, P(104, 1.52, 0, 0)],
+  [350, P(60, 1.42, 2, 5)],
+  [430, P(60, 1.46, 2, 3)],
+  [448, P(40, 1.36, 2, -4)],
+  [530, P(40, 1.39, 1, -2)],
+  [548, P(40, 1.38, 1, 0)],
+  [614, P(40, 1.42, 0, 2)],
+  [630, P(60, 1.05, 0, 0)],
+  [714, P(60, 1.1, 0, 0)],
+  [732, P(0, 1.2, 5, -14)],
+  [812, P(0, 1.25, 5, 12)],
+  [848, P(175, 0.8, 10, -20)],
   [900, P(190, 0.8, 8, -8)],
   [975, P(196, 0.8, 7, -3)],
 ];
@@ -217,6 +219,10 @@ const PhoneRig: React.FC = () => {
   const frame = useCurrentFrame();
   if (frame < 120) return null;
   const pose = poseAt(frame);
+  const prev = poseAt(frame - 1);
+  // motion blur from camera speed: snaps smear slightly, holds stay crisp
+  const speed = Math.abs(pose.y - prev.y) + Math.abs(pose.s - prev.s) * 700 + Math.abs(pose.ry - prev.ry) * 6 + Math.abs(pose.rx - prev.rx) * 6;
+  const blur = Math.min(7, Math.max(0, speed - 4) * 0.22);
   const dark = darkAt(frame);
   const shadow = 0.35 + dark * 0.3;
   return (
@@ -233,7 +239,7 @@ const PhoneRig: React.FC = () => {
           background: `rgba(60,35,15,${shadow * 0.5})`,
           filter: 'blur(40px)',
           transform: `scaleX(${pose.s})`,
-          opacity: prog(frame, 160, 30),
+          opacity: prog(frame, 160, 30) * (pose.s < 1.1 ? 1 : 0),
         }}
       />
       <div
@@ -242,7 +248,8 @@ const PhoneRig: React.FC = () => {
           left: PHONE_X,
           top: PHONE_Y,
           transformOrigin: '50% 40%',
-          transform: `translate(${pose.x}px, ${pose.y + Math.sin(frame / 45) * 6}px) rotateX(${pose.rx}deg) rotateY(${pose.ry}deg) scale(${pose.s})`,
+          transform: `translate(${pose.x}px, ${pose.y + Math.sin(frame / 45) * 4}px) rotateX(${pose.rx}deg) rotateY(${pose.ry}deg) scale(${pose.s})`,
+          filter: blur > 0.3 ? `blur(${blur.toFixed(2)}px)` : undefined,
         }}
       >
         <Phone width={PHONE_W}>
@@ -271,51 +278,17 @@ const musicDuck = (frame: number) => {
   return 1 - 0.5 * under;
 };
 
-const typingClicks = Array.from({length: Math.ceil(TYPED.length / 2)}, (_, i) => TYPE + TYPE_START + i * 2 * PER_CHAR);
-const CHAOS_PINGS = [2, 6, 14, 16, 24, 30, 38, 40, 52];
-
+// Sound design is deliberately sparse: the music carries the film, and only the
+// key "it worked" moments get a sound.
 const Sound: React.FC = () => (
   <>
     <Audio src={staticFile('launch/voiceover.wav')} volume={1} />
     <Audio src={staticFile('launch/music.wav')} volume={(f) => 0.7 * musicDuck(f)} />
-    {CHAOS_PINGS.map((at, i) => (
-      <Sfx key={`p${i}`} at={at} src="launch/ping.wav" volume={0.16 + i * 0.012} rate={[1, 1.12, 0.94, 1.25, 1.06][i % 5]} />
-    ))}
-    <Sfx at={104} src="launch/swoosh.wav" volume={0.5} />
-    <Sfx at={134} src="launch/swoosh.wav" volume={0.28} rate={0.85} />
-    {/* typing */}
-    <Sfx at={TYPE} src="launch/tap.wav" volume={0.4} />
-    <Sfx at={TYPE + 14} src="launch/tap.wav" volume={0.35} />
-    {typingClicks.map((at, i) => (
-      <Sfx key={`k${i}`} at={at} src="launch/key.wav" volume={0.22} rate={[1, 1.08, 0.95][i % 3]} />
-    ))}
-    <Sfx at={TYPE + TYPE_START + 23 * PER_CHAR} src="launch/pop.wav" volume={0.3} />
-    <Sfx at={TYPE + TYPE_START + 27 * PER_CHAR} src="launch/pop.wav" volume={0.3} rate={1.15} />
-    <Sfx at={TYPE + RETURN_AT} src="launch/tick.wav" volume={0.42} />
-    {/* drag */}
-    <Sfx at={DRAG + 10} src="launch/lift.wav" volume={0.35} />
-    <Sfx at={DRAG + 56} src="launch/drop.wav" volume={0.45} />
-    <Sfx at={DRAG + 80} src="launch/tap.wav" volume={0.35} />
-    {/* block + replan */}
-    <Sfx at={TL_START + BLOCK_TAP} src="launch/tap.wav" volume={0.4} />
-    <Sfx at={TL_START + BLOCK_TAP + 4} src="launch/shimmer.wav" volume={0.22} />
-    {[30, 38, 46].map((at, i) => (
-      <Sfx key={`b${i}`} at={TL_START + at + 20} src="launch/drop.wav" volume={0.28} rate={1 + i * 0.08} />
-    ))}
-    <Sfx at={TL_START + NOTIFY + 2} src="launch/ding.wav" volume={0.32} />
-    <Sfx at={TL_START + NOTIFY + 26} src="launch/thud.wav" volume={0.32} />
-    <Sfx at={TL_START + REPLAN_TAP} src="launch/tap.wav" volume={0.4} />
-    <Sfx at={TL_START + REPLAN_TAP + 4} src="launch/shimmer.wav" volume={0.26} />
-    <Sfx at={TL_START + REPLAN_TAP + 22} src="launch/tick.wav" volume={0.38} />
-    {/* widgets */}
-    <Sfx at={L.widgets[0] - 2} src="launch/swoosh.wav" volume={0.25} />
-    <Sfx at={HOME + HOME_TICKS[2]} src="launch/tick.wav" volume={0.42} />
-    <Sfx at={HOME + HOME_TICKS[3]} src="launch/tick.wav" volume={0.42} rate={1.06} />
-    {/* themes */}
-    <Sfx at={L.themes[0] - 2} src="launch/swoosh.wav" volume={0.22} />
-    <Sfx at={DARK_IN} src="launch/swoosh.wav" volume={0.26} rate={0.8} />
-    <Sfx at={GLASS_IN} src="launch/shimmer.wav" volume={0.3} />
-    <Sfx at={L.hero[0]} src="launch/swoosh.wav" volume={0.3} rate={0.75} />
+    <Sfx at={TYPE + RETURN_AT} src="launch/tick.wav" volume={0.3} />
+    <Sfx at={DRAG + 56} src="launch/drop.wav" volume={0.3} />
+    <Sfx at={TL_START + REPLAN_TAP + 4} src="launch/shimmer.wav" volume={0.2} />
+    <Sfx at={HOME + HOME_TICKS[2]} src="launch/tick.wav" volume={0.3} />
+    <Sfx at={HOME + HOME_TICKS[3]} src="launch/tick.wav" volume={0.3} rate={1.06} />
   </>
 );
 

@@ -3,30 +3,72 @@ import {easeInOut, prog} from '../../anim';
 import {DISPLAY, L} from '../theme';
 import {darkAt, DARK_IN, GLASS_IN} from '../timeline';
 
-type Title = {from: number; to: number; title: string; sub?: string; center?: boolean};
+type Title = {from: number; to: number; title: string; sub?: string};
 
+// *word* renders in the accent colour.
 export const TITLES: Title[] = [
-  {from: 8, to: 50, title: 'Too many apps.', center: true},
-  {from: 48, to: 88, title: 'Too many pings.', center: true},
-  {from: 86, to: 120, title: 'Not enough week.', center: true},
-  {from: 140, to: 244, title: 'Meet Plainweek.', sub: 'Your whole week, finally calm.'},
-  {from: L.type[0] + 4, to: L.type[1] - 2, title: 'Just type it.', sub: 'Natural language, instantly organised.'},
-  {from: L.drag[0] + 4, to: L.drag[1] - 2, title: 'Drag. Drop. Done.', sub: 'Rearrange your week in a gesture.'},
-  {from: L.block[0] + 4, to: L.block[1] - 2, title: 'AI time blocking.', sub: 'Tasks fitted around your meetings.'},
-  {from: L.replan[0] + 2, to: L.replan[1] - 2, title: 'Plans changed?', sub: 'Re-plan your day in one tap.'},
-  {from: L.widgets[0] + 4, to: L.widgets[1] - 2, title: 'Beautiful widgets.', sub: 'Your week, right on your Home Screen.'},
+  {from: 140, to: 244, title: 'Meet *Plainweek.*', sub: 'Your whole week, finally calm.'},
+  {from: L.type[0] + 4, to: L.type[1] - 2, title: 'Just *type* it.', sub: 'Natural language, instantly organised.'},
+  {from: L.drag[0] + 4, to: L.drag[1] - 2, title: 'Drag. Drop. *Done.*', sub: 'Rearrange your week in a gesture.'},
+  {from: L.block[0] + 4, to: L.block[1] - 2, title: 'AI *time blocking.*', sub: 'Tasks fitted around your meetings.'},
+  {from: L.replan[0] + 2, to: L.replan[1] - 2, title: 'Re-plan in *one tap.*', sub: 'When your day shifts, Plainweek adapts.'},
+  {from: L.widgets[0] + 4, to: L.widgets[1] - 2, title: '*Beautiful* widgets.', sub: 'Your week, right on your Home Screen.'},
 ];
+
+const ACCENT = '#E07A3F';
+
+/** Each word slides up out of a mask, staggered; *word* is accented. */
+const Words: React.FC<{text: string; frame: number; from: number; color: string; stagger?: number}> = ({text, frame, from, color, stagger = 3}) => (
+  <>
+    {text.split(' ').map((w, i) => {
+      const accent = w.startsWith('*') || w.endsWith('*');
+      const clean = w.replace(/\*/g, '');
+      const k = prog(frame, from + i * stagger, 14);
+      return (
+        <span key={i} style={{display: 'inline-block', overflow: 'hidden', verticalAlign: 'top', paddingBottom: '0.08em', marginRight: '0.24em'}}>
+          <span style={{display: 'inline-block', transform: `translateY(${(1 - k) * 105}%)`, color: accent ? ACCENT : color}}>{clean}</span>
+        </span>
+      );
+    })}
+  </>
+);
+
+/** Opening hook, timed to the voice-over: "Your week / shouldn't feel / this loud." */
+const HOOK: [string, number][] = [['Your', 12], ['week', 19], ["shouldn't", 29], ['feel', 41], ['this', 50], ['loud.', 57]];
+const Hook: React.FC = () => {
+  const frame = useCurrentFrame();
+  if (frame > 118) return null;
+  const out = prog(frame, 102, 12, easeInOut);
+  const word = ([w, at]: [string, number]) => {
+    const k = prog(frame, at, 9);
+    const loud = w === 'loud.';
+    const punch = loud ? 1 + Math.sin(Math.min(1, prog(frame, at, 8)) * Math.PI) * 0.14 : 1;
+    const shake = loud && frame > at + 4 ? Math.sin(frame * 2.3) * 3 * (1 - prog(frame, at + 4, 30)) : 0;
+    return (
+      <span key={w} style={{display: 'inline-block', marginRight: '0.22em', opacity: k, transform: `translate(${shake}px, ${(1 - k) * 40}px) scale(${(0.9 + 0.1 * k) * punch})`, filter: `blur(${(1 - k) * 10}px)`, color: loud ? '#FF6B4A' : '#F4F0EA'}}>
+        {w}
+      </span>
+    );
+  };
+  return (
+    <div style={{position: 'absolute', left: 40, right: 40, top: 690, textAlign: 'center', fontFamily: DISPLAY, fontSize: 138, fontWeight: 700, letterSpacing: -4.5, lineHeight: 1.02, opacity: 1 - out, filter: `blur(${out * 10}px)`, transform: `scale(${1 + out * 0.08})`}}>
+      <div>{HOOK.slice(0, 2).map(word)}</div>
+      <div>{HOOK.slice(2, 4).map(word)}</div>
+      <div>{HOOK.slice(4).map(word)}</div>
+    </div>
+  );
+};
 
 export const Titles: React.FC = () => {
   const frame = useCurrentFrame();
   const dark = darkAt(frame);
-  const ink = frame < 125 ? '#F4F0EA' : `rgb(${28 + dark * 217},${27 + dark * 215},${25 + dark * 212})`;
-  const sub = frame < 125 ? '#A39C92' : dark > 0.5 ? '#A39C92' : '#8B857C';
+  const ink = `rgb(${28 + dark * 217},${27 + dark * 215},${25 + dark * 212})`;
+  const sub = dark > 0.5 ? '#A39C92' : '#7D766D';
   return (
     <>
+      <Hook />
       {TITLES.map((c, i) => {
         if (frame < c.from - 1 || frame > c.to + 1) return null;
-        const a = prog(frame, c.from, 18);
         const s = prog(frame, c.from + 7, 18);
         const out = prog(frame, c.to - 10, 10, easeInOut);
         return (
@@ -36,7 +78,7 @@ export const Titles: React.FC = () => {
               position: 'absolute',
               left: 60,
               right: 60,
-              top: c.center ? 880 : 168,
+              top: 150,
               textAlign: 'center',
               fontFamily: DISPLAY,
               opacity: 1 - out,
@@ -44,25 +86,14 @@ export const Titles: React.FC = () => {
               filter: `blur(${out * 8}px)`,
             }}
           >
-            <div
-              style={{
-                fontSize: c.center ? 104 : 88,
-                lineHeight: 1.05,
-                fontWeight: 600,
-                letterSpacing: -2.6,
-                color: ink,
-                opacity: a,
-                transform: `translateY(${(1 - a) * 30}px) scale(${0.97 + 0.03 * a})`,
-                filter: `blur(${(1 - a) * 12}px)`,
-              }}
-            >
-              {c.title}
+            <div style={{fontSize: 92, lineHeight: 1.05, fontWeight: 700, letterSpacing: -3, color: ink}}>
+              <Words text={c.title} frame={frame} from={c.from} color={ink} />
             </div>
             {c.sub && (
               <div
                 style={{
                   marginTop: 18,
-                  fontSize: 38,
+                  fontSize: 36,
                   fontWeight: 500,
                   letterSpacing: -0.6,
                   color: sub,
@@ -101,7 +132,7 @@ const ThemeWords: React.FC = () => {
         position: 'absolute',
         left: 40,
         right: 40,
-        top: 168,
+        top: 150,
         textAlign: 'center',
         fontFamily: DISPLAY,
         opacity: inA * (1 - out),

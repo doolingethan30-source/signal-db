@@ -175,13 +175,29 @@ def music():
         s += 8 * beat
         bar += 1
 
-    # soft pulse, 8 s – 24.4 s
-    p = 8.0
-    while p < 24.4:
-        k = tt(0.35)
-        thump = np.sin(2 * np.pi * (52 + 40 * np.exp(-k * 30)) * k) * np.exp(-k * 9)
-        place(fx, thump, p, 0.09)
-        p += beat * 2
+    # groove: kick from the reveal, shaker from the typing shot, snaps from the
+    # drag shot; it all drops out at 24.1 s for "Light. Dark. Glass."
+    pump = np.ones(N)
+    beat_t = 4.1
+    n = 0
+    while beat_t < 24.1:
+        k = tt(0.4)
+        kick = np.sin(2 * np.pi * (48 + 70 * np.exp(-k * 28)) * k) * np.exp(-k * 8) + 0.15 * rng.normal(0, 1, len(k)) * np.exp(-k * 200)
+        place(fx, kick, beat_t, 0.2 if beat_t > 8.2 else 0.12)
+        i0 = int(beat_t * SR)
+        seg = tt(0.35)
+        pump[i0 : i0 + len(seg)] = np.minimum(pump[i0 : i0 + len(seg)], 1 - 0.3 * np.exp(-seg * 9))
+        if beat_t > 8.2:
+            for half in (0, 0.5):
+                h = tt(0.06)
+                shaker = fft_filter(rng.normal(0, 1, len(h)), lo=6000, hi=12000) * np.exp(-h * 70)
+                place(fx, shaker, beat_t + half * beat, 0.05 if half else 0.035)
+        if beat_t > 11.6 and n % 2 == 1:
+            c = tt(0.25)
+            snap = fft_filter(rng.normal(0, 1, len(c)), lo=1200, hi=6000) * np.exp(-c * 30)
+            place(fx, reverb(snap, 0.5, 0.3, 7), beat_t, 0.1)
+        beat_t += beat
+        n += 1
 
     # riser into the hero
     r = tt(2.7)
@@ -191,7 +207,7 @@ def music():
         place(keys, bell(hz(m), 3.2, 0.7), 27.3 + 0.07 * i, 0.12)
     place(fx, sub, 27.3, 0.35)
 
-    pad = fft_filter(pad, hi=2400)
+    pad = fft_filter(pad, hi=2400) * pump
     keys = reverb(keys, 3.2, 0.45, 1)
     pad = reverb(pad, 3.0, 0.3, 2)
     left = pad * 0.95 + keys * 1.05 + fx

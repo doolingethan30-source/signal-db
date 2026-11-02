@@ -13,8 +13,8 @@ export const FloatingWidgets: React.FC<{doneAmounts: number[]}> = ({doneAmounts}
   const out = prog(frame, to - 14, 14, easeInOut);
   const done = doneAmounts.reduce((a, b) => a + b, 0);
   const items = [
-    {el: <SmallWidget t={t} done={done} />, x: 640, y: 600, s: 1.55, at: 12, ry: -14, dir: 1},
-    {el: <WeekStripWidget t={t} fill={prog(f, 30, 40, easeInOut)} />, x: 34, y: 1370, s: 1.5, at: 22, ry: 12, dir: -1},
+    {el: <SmallWidget t={t} done={done} />, x: 700, y: 520, s: 1.5, at: 12, ry: -14, dir: 1},
+    {el: <WeekStripWidget t={t} fill={prog(f, 30, 40, easeInOut)} />, x: 24, y: 1440, s: 1.5, at: 22, ry: 12, dir: -1},
   ];
   return (
     <div style={{position: 'absolute', inset: 0, perspective: 1800}}>

@@ -87,7 +87,7 @@ const Body: React.FC<{it: Item}> = ({it}) => {
 export const ChaosField: React.FC = () => {
   const frame = useCurrentFrame();
   if (frame > 146) return null;
-  const dolly = 1 + (frame / 140) * 0.28;
+  const dolly = 1.04 + (frame / 140) * 0.42;
   const collapse = prog(frame, COLLAPSE, 30, easeInOut);
   const cx = 540;
   const cy = 960;
@@ -100,8 +100,8 @@ export const ChaosField: React.FC = () => {
           position: 'absolute',
           left: 0,
           right: 0,
-          top: 760,
-          height: 380,
+          top: 560,
+          height: 720,
           background: 'radial-gradient(60% 50% at 50% 50%, rgba(11,10,9,0.85) 0%, rgba(11,10,9,0) 100%)',
           zIndex: 5,
           opacity: 1 - collapse,
@@ -110,8 +110,10 @@ export const ChaosField: React.FC = () => {
       {[...ITEMS]
         .sort((a, b) => a.d - b.d)
         .map((it, i) => {
-          if (frame < it.at) return null;
-          const p = pop(frame, it.at, 13);
+          // everything lands within the first ~20 frames so frame 0 already hooks
+          const at = it.at * 0.35 - 12;
+          if (frame < at) return null;
+          const p = pop(frame, at, 11);
           const s = it.d * dolly * (1 - collapse * 0.9);
           const drift = Math.sin(frame * 0.05 + i) * 14 * it.d;
           const jitter = Math.sin(frame * 0.9 + i * 2.1) * 3 * tension * it.d;
