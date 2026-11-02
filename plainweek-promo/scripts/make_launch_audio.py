@@ -9,7 +9,7 @@ Music map (seconds):
   4.1       release: soft sub drop + bright bell chord
   4.1–24.6  calm ambient pad in F with a gentle piano motif and a soft pulse
   24.6–27.3 riser through the theme changes
-  27.3–30   hero chord with a long tail
+  27.3–32.5 hero chord with a long tail
 """
 import os
 import wave
@@ -17,7 +17,7 @@ import wave
 import numpy as np
 
 SR = 48000
-DUR = 30.0
+DUR = 32.5
 N = int(SR * DUR)
 OUT = os.path.join(os.path.dirname(__file__), "..", "public", "launch")
 os.makedirs(OUT, exist_ok=True)
@@ -153,7 +153,7 @@ def music():
         (18.4, 22.6, [48, 55, 60, 62, 64, 67]),  # Cadd9
         (22.6, 24.6, [45, 52, 57, 60, 64, 67]),  # Am7(9)
         (24.6, 27.3, [46, 53, 58, 62, 64, 69]),  # Bbmaj7#11
-        (27.3, 30.0, [41, 53, 57, 60, 64, 67, 72]),  # Fmaj9 (hero)
+        (27.3, DUR, [41, 53, 57, 60, 64, 67, 72]),  # Fmaj9 (hero)
     ]
     for s, e, notes in chords:
         d = e - s + 2.2

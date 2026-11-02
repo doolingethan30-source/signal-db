@@ -1,5 +1,6 @@
 import {Composition} from 'remotion';
 import {Launch} from './launch/Launch';
+import {FILM_FRAMES} from './launch/theme';
 import {Promo} from './Promo';
 import {DURATION, FPS, HEIGHT, WIDTH} from './theme';
 
@@ -16,7 +17,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition
       id="PlainweekLaunch"
       component={Launch}
-      durationInFrames={900}
+      durationInFrames={FILM_FRAMES}
       fps={FPS}
       width={WIDTH}
       height={HEIGHT}

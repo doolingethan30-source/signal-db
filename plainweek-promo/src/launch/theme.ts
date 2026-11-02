@@ -1,10 +1,12 @@
 // Plainweek launch film: shared palette, theme morphing and timeline.
 
+export const FILM_FRAMES = 975; // 32.5 s, long enough for the voice-over tagline
+
 export const ACCENT = '#E07A3F';
 export const DISPLAY = '"Inter Display", Inter, -apple-system, sans-serif';
 export const UI = 'Inter, -apple-system, "Helvetica Neue", sans-serif';
 
-// Scene boundaries in frames (30 fps, 900 frames = 30 s).
+// Scene boundaries in frames (30 fps).
 export const L = {
   chaos: [0, 140],
   reveal: [130, 246],
@@ -14,7 +16,7 @@ export const L = {
   replan: [534, 620],
   widgets: [620, 722],
   themes: [722, 818],
-  hero: [818, 900],
+  hero: [818, 975],
 } as const;
 
 type RGB = [number, number, number];

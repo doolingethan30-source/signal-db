@@ -56,3 +56,10 @@ Rendered file: `out/plainweek-launch.mp4` (H.264 High, yuv420p, AAC, +faststart,
   ffmpeg -i out/raw.mp4 -t 30 -vf "scale=in_range=full:out_range=tv,format=yuv420p" -c:v libx264 -crf 16 \
     -af loudnorm=I=-14:TP=-1.5:LRA=11 -c:a aac -b:a 192k -movflags +faststart out/plainweek-launch.mp4
   ```
+
+### Voice-over version — `out/plainweek-launch-vo.mp4` (32.5 s)
+- Source: `public/launch/voiceover-source.mp3` (ElevenLabs).
+- `python3 scripts/place_voiceover.py` cuts it into its 13 lines at the natural pauses and places each line on its shot. It writes `public/launch/voiceover.wav` and `src/launch/voTimeline.ts`.
+- The music ducks about 6 dB under each line, with smooth 0.25 s ramps.
+- The hero shot holds 2.5 s longer, so the full tagline isn't rushed, and each tagline line appears as it's spoken.
+- The original 30 s cut with no voice-over is still at `out/plainweek-launch.mp4`.

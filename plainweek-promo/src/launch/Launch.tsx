@@ -11,8 +11,10 @@ import {Day, PER_CHAR, RETURN_AT, TYPE_START, TYPED} from './screens/Day';
 import {Home, HOME_TICKS} from './screens/Home';
 import {BLOCK_TAP, NOTIFY, REPLAN_TAP, Timeline} from './screens/Timeline';
 import {rowY, Week, weekData} from './screens/Week';
+import {FPS} from '../theme';
 import {L, LIGHT_THEME, theme, UI} from './theme';
 import {darkAt, DARK_IN, glassAt, GLASS_IN} from './timeline';
+import {VO_LINES} from './voTimeline';
 import {Box} from './ui';
 
 loadFonts();
@@ -42,6 +44,7 @@ const KEYS: [number, Pose][] = [
   [812, P(0, 1, 6, 14)],
   [850, P(175, 0.8, 10, -20)],
   [900, P(190, 0.8, 8, -8)],
+  [975, P(196, 0.8, 7, -3)],
 ];
 const poseAt = (frame: number): Pose => {
   if (frame <= KEYS[0][0]) return KEYS[0][1];
@@ -257,12 +260,24 @@ const Sfx: React.FC<{at: number; src: string; volume: number; rate?: number}> = 
   </Sequence>
 );
 
+/** Music ducks ~7 dB under each voice-over line, with short smooth ramps. */
+const musicDuck = (frame: number) => {
+  const s = frame / FPS;
+  let under = 0;
+  for (const l of VO_LINES) {
+    const k = Math.min((s - (l.from - 0.25)) / 0.25, ((l.to + 0.35) - s) / 0.35);
+    under = Math.max(under, Math.max(0, Math.min(1, k)));
+  }
+  return 1 - 0.5 * under;
+};
+
 const typingClicks = Array.from({length: Math.ceil(TYPED.length / 2)}, (_, i) => TYPE + TYPE_START + i * 2 * PER_CHAR);
 const CHAOS_PINGS = [2, 6, 14, 16, 24, 30, 38, 40, 52];
 
 const Sound: React.FC = () => (
   <>
-    <Audio src={staticFile('launch/music.wav')} volume={0.9} />
+    <Audio src={staticFile('launch/voiceover.wav')} volume={1} />
+    <Audio src={staticFile('launch/music.wav')} volume={(f) => 0.7 * musicDuck(f)} />
     {CHAOS_PINGS.map((at, i) => (
       <Sfx key={`p${i}`} at={at} src="launch/ping.wav" volume={0.16 + i * 0.012} rate={[1, 1.12, 0.94, 1.25, 1.06][i % 5]} />
     ))}

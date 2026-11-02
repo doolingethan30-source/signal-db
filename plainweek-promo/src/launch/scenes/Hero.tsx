@@ -43,9 +43,10 @@ export const HeroText: React.FC = () => {
   const f = frame - L.hero[0];
   if (f < 0) return null;
   const m = pop(f, 6, 14);
-  const word = prog(f, 14, 22);
-  const tag1 = prog(f, 26, 22);
-  const tag2 = prog(f, 34, 22);
+  const word = prog(f, 10, 22);
+  // tagline lines appear as the voice-over says them
+  const tag1 = prog(f, 36, 22);
+  const tag2 = prog(f, 84, 22);
   return (
     <div style={{position: 'absolute', left: 0, right: 0, top: 150, display: 'flex', flexDirection: 'column', alignItems: 'center', fontFamily: DISPLAY}}>
       <div style={{transform: `scale(${0.7 + 0.3 * m})`, opacity: Math.min(1, m * 1.4)}}>
