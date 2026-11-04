@@ -47,6 +47,9 @@ export const HeroText: React.FC = () => {
   // tagline lines appear as the voice-over says them
   const tag1 = prog(f, 36, 22);
   const tag2 = prog(f, 84, 22);
+  // call to action once the voice-over finishes
+  const cta = prog(f, 138, 18);
+  const shine = ((f - 150) % 60) / 60;
   return (
     <div style={{position: 'absolute', left: 0, right: 0, top: 150, display: 'flex', flexDirection: 'column', alignItems: 'center', fontFamily: DISPLAY}}>
       <div style={{transform: `scale(${0.7 + 0.3 * m})`, opacity: Math.min(1, m * 1.4)}}>
@@ -71,6 +74,38 @@ export const HeroText: React.FC = () => {
         <div style={{opacity: tag1, transform: `translateY(${(1 - tag1) * 18}px)`}}>Spend less time planning.</div>
         <div style={{opacity: tag2, transform: `translateY(${(1 - tag2) * 18}px)`, color: '#1C1B19'}}>More time doing what matters.</div>
       </div>
+      <div
+        style={{
+          marginTop: 40,
+          position: 'relative',
+          overflow: 'hidden',
+          padding: '26px 54px',
+          borderRadius: 999,
+          background: 'linear-gradient(150deg, #EE9256 0%, #E07A3F 55%, #CF6A30 100%)',
+          color: '#fff',
+          fontSize: 44,
+          fontWeight: 700,
+          letterSpacing: -0.8,
+          boxShadow: '0 24px 50px -16px rgba(201,99,43,0.65)',
+          opacity: cta,
+          transform: `translateY(${(1 - cta) * 30}px) scale(${(0.92 + 0.08 * cta) * (1 + (f > 160 ? Math.sin((f - 160) / 9) * 0.012 : 0))})`,
+        }}
+      >
+        Download Plainweek free
+        {f > 150 && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              width: 160,
+              left: -160 + shine * 900,
+              background: 'linear-gradient(100deg, rgba(255,255,255,0), rgba(255,255,255,0.35), rgba(255,255,255,0))',
+            }}
+          />
+        )}
+      </div>
+      <div style={{marginTop: 18, fontSize: 32, fontWeight: 500, color: '#7D766D', opacity: prog(f, 148, 16)}}>Available on the App Store</div>
     </div>
   );
 };

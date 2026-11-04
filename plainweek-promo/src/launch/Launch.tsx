@@ -5,6 +5,7 @@ import {loadFonts} from '../fonts';
 import {ChaosField} from './scenes/ChaosField';
 import {FloatingWidgets} from './scenes/FloatingWidgets';
 import {HeroText} from './scenes/Hero';
+import {INTRO_FRAMES, MentalLoad} from './scenes/MentalLoad';
 import {Stage} from './scenes/Stage';
 import {Titles} from './scenes/Titles';
 import {Day, RETURN_AT} from './screens/Day';
@@ -12,7 +13,7 @@ import {Home, HOME_TICKS} from './screens/Home';
 import {REPLAN_TAP, Timeline} from './screens/Timeline';
 import {rowY, Week, weekData} from './screens/Week';
 import {FPS} from '../theme';
-import {L, LIGHT_THEME, theme, UI} from './theme';
+import {FILM_FRAMES, L, LIGHT_THEME, theme, UI} from './theme';
 import {darkAt, glassAt} from './timeline';
 import {VO_LINES} from './voTimeline';
 import {Box} from './ui';
@@ -47,6 +48,7 @@ const KEYS: [number, Pose][] = [
   [848, P(175, 0.8, 10, -20)],
   [900, P(190, 0.8, 8, -8)],
   [975, P(196, 0.8, 7, -3)],
+  [1050, P(200, 0.8, 6, 2)],
 ];
 const poseAt = (frame: number): Pose => {
   if (frame <= KEYS[0][0]) return KEYS[0][1];
@@ -292,7 +294,8 @@ const Sound: React.FC = () => (
   </>
 );
 
-export const Launch: React.FC = () => (
+/** Acts 2–3: the noise, Plainweek's use cases, and the call to action. */
+const LaunchCore: React.FC = () => (
   <AbsoluteFill style={{overflow: 'hidden', background: '#0B0A09'}}>
     <Stage />
     <ChaosField />
@@ -303,3 +306,21 @@ export const Launch: React.FC = () => (
     <Sound />
   </AbsoluteFill>
 );
+
+/**
+ * Full film: Act 1 (the problem: too much to keep track of, then the noise),
+ * Act 2 (Plainweek's use cases) and Act 3 (logo, tagline and call to action).
+ */
+export const Launch: React.FC = () => (
+  <AbsoluteFill style={{background: '#0B0A09'}}>
+    <Sequence durationInFrames={INTRO_FRAMES}>
+      <MentalLoad />
+      <Audio src={staticFile('launch/intro.wav')} volume={0.42} />
+    </Sequence>
+    <Sequence from={INTRO_FRAMES}>
+      <LaunchCore />
+    </Sequence>
+  </AbsoluteFill>
+);
+
+export const LAUNCH_FRAMES = INTRO_FRAMES + FILM_FRAMES;

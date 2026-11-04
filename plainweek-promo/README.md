@@ -70,3 +70,10 @@ Rendered file: `out/plainweek-launch.mp4` (H.264 High, yuv420p, AAC, +faststart,
 - **Titles:** each word slides up out of a mask, with the key word in the accent colour.
 - **Score:** a soft kick from the reveal, shakers and snaps building through the features, and a gentle pad pump. It drops out for "Light. Dark. Glass." before the hero chord.
 - **Sound effects:** only five remain (the typed-task confirmation, the drop, two widget ticks and the re-plan shimmer).
+
+### Three-act cut (current `out/plainweek-launch-vo.mp4`, 39 s)
+1. **Problem (0–8 s):** first the mental load (`scenes/MentalLoad.tsx`). Life's to-dos pile up faster and faster, the counter reads "24 things on your mind", and items get "Missed", "Overdue" and "Forgot" tags under "So much to remember. / So easy to forget." Then the noisy chaos field and the voice-over hook "Your week shouldn't feel this loud."
+2. **Use case (8–31 s):** the Plainweek feature shots.
+3. **Call to action (31–39 s):** the logo and tagline, then a "Download Plainweek free" button ("Available on the App Store") that holds for the last ~4 s.
+
+`Launch` plays the 4 s intro (with `public/launch/intro.wav`, made by `make_launch_audio.py`), then `LaunchCore` (acts 2–3) in a `<Sequence>` offset by 120 frames. The core film's own timings, music and voice-over shift with it automatically.

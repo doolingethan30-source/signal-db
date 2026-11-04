@@ -9,7 +9,7 @@ Music map (seconds):
   4.1       release: soft sub drop + bright bell chord
   4.1–24.6  calm ambient pad in F with a gentle piano motif and a soft pulse
   24.6–27.3 riser through the theme changes
-  27.3–32.5 hero chord with a long tail
+  27.3–35   hero chord with a long tail, under the call to action
 """
 import os
 import wave
@@ -17,7 +17,7 @@ import wave
 import numpy as np
 
 SR = 48000
-DUR = 32.5
+DUR = 35.0
 N = int(SR * DUR)
 OUT = os.path.join(os.path.dirname(__file__), "..", "public", "launch")
 os.makedirs(OUT, exist_ok=True)
@@ -266,7 +266,35 @@ def sfx():
     write("thud.wav", np.sin(2 * np.pi * (90 + 40 * np.exp(-t * 20)) * t) * np.exp(-t * 12) * 0.6)
 
 
+def intro():
+    """Act 1 opener (4 s): a soft clock that speeds up as the to-do list outruns
+    you, a low drone, two quiet dissonant piano notes and a swell into the noise."""
+    d = 4.0
+    buf = np.zeros(int(SR * d))
+    t = tt(d)
+    drone = sum(a * np.sin(2 * np.pi * f * t + f) for f, a in ((55, 0.5), (55.3, 0.4), (82.4, 0.2), (110.2, 0.15)))
+    drone = fft_filter(drone * np.minimum(1, t / 0.6) * (0.55 + 0.45 * t / d), hi=500)
+    buf += drone / np.max(np.abs(drone)) * 0.22
+    tick, step = 0.1, 0.5
+    while tick < d - 0.1:
+        c = tt(0.03)
+        click = rng.normal(0, 1, len(c)) * np.exp(-c * 300) + np.sin(2 * np.pi * 2600 * c) * np.exp(-c * 200)
+        place(buf, click, tick, 0.05 + 0.04 * tick / d)
+        tick += step
+        step = max(0.12, step * 0.9)
+    keys = np.zeros_like(buf)
+    place(keys, piano(hz(64), 2.6, 0.9), 0.08, 0.12)
+    place(keys, piano(hz(65), 2.4, 0.9), 1.85, 0.12)
+    buf += reverb(keys, 2.4, 0.45, 9)
+    sw = tt(1.0)
+    noise = fft_filter(rng.normal(0, 1, len(sw)), lo=300, hi=6000)
+    place(buf, noise / np.max(np.abs(noise)) * (sw / 1.0) ** 3 * 0.2, 3.0)
+    buf *= np.minimum(1, t / 0.05)
+    write("intro.wav", buf / (np.max(np.abs(buf)) + 1e-9) * 0.7)
+
+
 if __name__ == "__main__":
+    intro()
     music()
     sfx()
     print("wrote", sorted(os.listdir(OUT)))

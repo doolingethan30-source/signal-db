@@ -14,7 +14,7 @@ ROOT = os.path.join(os.path.dirname(__file__), "..")
 SRC = os.path.join(ROOT, "public", "launch", "voiceover-source.mp3")
 OUT = os.path.join(ROOT, "public", "launch", "voiceover.wav")
 TS = os.path.join(ROOT, "src", "launch", "voTimeline.ts")
-FILM = 32.5
+FILM = 35.0
 
 # (source start, source end, film position, line). Source cut points sit in the
 # pauses found with silencedetect; film positions line up with each shot.

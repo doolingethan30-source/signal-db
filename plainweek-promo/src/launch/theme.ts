@@ -1,6 +1,8 @@
 // Plainweek launch film: shared palette, theme morphing and timeline.
 
-export const FILM_FRAMES = 975; // 32.5 s, long enough for the voice-over tagline
+// Acts 2–3 (after the 4 s mental-load intro): 35 s, long enough for the
+// voice-over tagline plus a call to action that holds on screen.
+export const FILM_FRAMES = 1050;
 
 export const ACCENT = '#E07A3F';
 export const DISPLAY = '"Inter Display", Inter, -apple-system, sans-serif';
@@ -16,7 +18,7 @@ export const L = {
   replan: [534, 620],
   widgets: [620, 722],
   themes: [722, 818],
-  hero: [818, 975],
+  hero: [818, 1050],
 } as const;
 
 type RGB = [number, number, number];
