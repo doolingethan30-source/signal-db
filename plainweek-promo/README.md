@@ -77,3 +77,28 @@ Rendered file: `out/plainweek-launch.mp4` (H.264 High, yuv420p, AAC, +faststart,
 3. **Call to action (31–39 s):** the logo and tagline, then a "Download Plainweek free" button ("Available on the App Store") that holds for the last ~4 s.
 
 `Launch` plays the 4 s intro (with `public/launch/intro.wav`, made by `make_launch_audio.py`), then `LaunchCore` (acts 2–3) in a `<Sequence>` offset by 120 frames. The core film's own timings, music and voice-over shift with it automatically.
+
+---
+
+# Plainweek Pro – Family Mode (`PlainweekFamily`, 30 s)
+
+Rendered file: `out/plainweek-family-mode.mp4` (1080×1920, 30 fps, H.264/yuv420p, AAC, +faststart, -14 LUFS).
+
+| Time | Act | What happens |
+| --- | --- | --- |
+| 0–5 s | Intro | A modern home at sunrise. Each window lights up with a family member (Mum, Dad, Ava, Leo), then they all link to one Plainweek hub. "PLAINWEEK PRO · Family Mode. One shared home for the whole household." |
+| 5–10 s | Problem | A fridge door fills with sticky notes, a grocery list and an empty chore chart, and some slip off. Mum's lock screen fills with everyone's reminders. "Chores forgotten." / "Lists everywhere." / "One parent, holding it all." |
+| 10–13 s | Use case | Mum assigns "Tidy your room" to Ava for 3 stars, due 6 PM. |
+| 13–16 s | Use case | The chore reaches Ava's iPhone instantly. She ticks it, three stars fly to her balance, and it syncs back to Mum. |
+| 16–19 s | Use case | Ava redeems "Movie night"; Mum approves it on her phone, and Ava's phone says "Approved". |
+| 19–23 s | Use case | Three iPhones show the live shared grocery list, the colour-coded family calendar and everyone's progress, with sync pulses between them. |
+| 23–30 s | Call to action | A product shot of the Family hub with a light sweep, then "One home. One plan. A happier family." and "Discover Family Mode with Plainweek Pro". |
+
+- Source: `src/family/`. Timing is in `theme.ts`, the phone rig, sync beams, titles and call to action are in `Family.tsx`, and the app screens are in `screens/`.
+- Audio: `python3 scripts/make_family_audio.py` writes `public/family/*.wav`. It's an upbeat 104 bpm score in D major (quiet morning, muted problem, the groove arriving with Family Mode, then a resolving finale) plus just five UI sounds: sync, tick, stars, approve and the logo shimmer.
+- Render:
+  ```bash
+  npx remotion render PlainweekFamily out/raw.mp4
+  ffmpeg -i out/raw.mp4 -t 30 -vf "scale=in_range=full:out_range=tv,format=yuv420p" -c:v libx264 -crf 16 \
+    -af loudnorm=I=-14:TP=-1.5:LRA=11 -c:a aac -b:a 192k -movflags +faststart out/plainweek-family-mode.mp4
+  ```
