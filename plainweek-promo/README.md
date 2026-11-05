@@ -102,3 +102,9 @@ Rendered file: `out/plainweek-family-mode.mp4` (1080×1920, 30 fps, H.264/yuv420
   ffmpeg -i out/raw.mp4 -t 30 -vf "scale=in_range=full:out_range=tv,format=yuv420p" -c:v libx264 -crf 16 \
     -af loudnorm=I=-14:TP=-1.5:LRA=11 -c:a aac -b:a 192k -movflags +faststart out/plainweek-family-mode.mp4
   ```
+
+### Voice-over version: `out/plainweek-family-mode-vo.mp4` (30 s)
+- Source: `public/family/voiceover-source.mp3` (ElevenLabs, Lucy).
+- `python3 scripts/place_family_voiceover.py` cuts it into its 12 lines at the natural pauses and places each line on its shot. It writes `public/family/voiceover.wav` and `src/family/voTimeline.ts`.
+- The music ducks about 6 dB under each line. The "Family Mode." title and each call-to-action line appear as they're spoken.
+- The cut without voice-over is still at `out/plainweek-family-mode.mp4`. That file was rendered before these changes, so re-rendering now gives the new text timing.

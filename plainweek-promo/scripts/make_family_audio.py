@@ -203,14 +203,14 @@ def music():
             if when < 22.9:
                 place(keys, bell(hz(m), 1.6, 0.8), when, 0.06)
     r = tt(0.9)
-    place(drums, fft_filter(rng.normal(0, 1, len(r)), lo=600, hi=9000) * (r / 0.9) ** 3 * 0.12, 22.1)
+    place(drums, fft_filter(rng.normal(0, 1, len(r)), lo=600, hi=9000) * (r / 0.9) ** 3 * 0.06, 22.1)
 
     # ---- 23–30 s: resolve
     final = [38, 50, 57, 62, 64, 66, 69, 73]  # Dmaj9 wide
     for k, m in enumerate(final):
         place(pad, pad_tone(hz(m), 7.4, attack=0.8, release=3.5), 23.0, 0.36 if k == 0 else 0.15)
     sub = tt(2.2)
-    place(drums, np.sin(2 * np.pi * (38 + 30 * np.exp(-sub * 6)) * sub) * np.exp(-sub * 1.8), 23.0, 0.35)
+    place(drums, np.sin(2 * np.pi * (38 + 30 * np.exp(-sub * 6)) * sub) * np.exp(-sub * 1.8), 23.0, 0.2)
     for i, m in enumerate((74, 78, 81, 85, 86)):
         place(keys, bell(hz(m), 2.8, 0.8), 23.05 + i * 0.09, 0.08)
     for i, m in enumerate((62, 66, 69, 74, 78)):

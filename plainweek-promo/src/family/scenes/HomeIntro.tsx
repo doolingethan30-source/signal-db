@@ -180,11 +180,11 @@ export const HomeIntro: React.FC = () => {
       <div style={{position: 'absolute', inset: 0, background: '#FBF3E8', opacity: prog(f, 138, 12)}} />
       {/* titles */}
       <div style={{position: 'absolute', left: 60, right: 60, top: 190, textAlign: 'center', fontFamily: DISPLAY, opacity: 1 - prog(f, 126, 12)}}>
-        <div style={{fontSize: 30, fontWeight: 700, letterSpacing: 8, color: ACCENT, opacity: title(56), transform: `translateY(${(1 - title(56)) * 16}px)`}}>PLAINWEEK PRO</div>
-        <div style={{fontSize: 118, fontWeight: 700, letterSpacing: -4.5, lineHeight: 1.05, color: INK, marginTop: 16, opacity: title(62), transform: `translateY(${(1 - title(62)) * 30}px)`, filter: `blur(${(1 - title(62)) * 10}px)`}}>
+        <div style={{fontSize: 30, fontWeight: 700, letterSpacing: 8, color: ACCENT, opacity: title(24), transform: `translateY(${(1 - title(24)) * 16}px)`}}>PLAINWEEK PRO</div>
+        <div style={{fontSize: 118, fontWeight: 700, letterSpacing: -4.5, lineHeight: 1.05, color: INK, marginTop: 16, opacity: title(28), transform: `translateY(${(1 - title(28)) * 30}px)`, filter: `blur(${(1 - title(28)) * 10}px)`}}>
           Family Mode.
         </div>
-        <div style={{fontSize: 40, fontWeight: 500, letterSpacing: -0.6, color: '#5E574E', marginTop: 18, opacity: title(78), transform: `translateY(${(1 - title(78)) * 16}px)`}}>
+        <div style={{fontSize: 40, fontWeight: 500, letterSpacing: -0.6, color: '#5E574E', marginTop: 18, opacity: title(70), transform: `translateY(${(1 - title(70)) * 16}px)`}}>
           One shared home for the whole household.
         </div>
       </div>

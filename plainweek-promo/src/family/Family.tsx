@@ -10,6 +10,7 @@ import {APPROVED_AT, KidDay, REDEEM_AT, Rewards, TICK_AT} from './screens/Kid';
 import {ApproveCard, AssignSheet, FamilyHub, HubState, MumLock} from './screens/Parent';
 import {FamilyCalendar, FamilyProgress, Shopping} from './screens/Shared';
 import {ACCENT, F, INK} from './theme';
+import {VO_LINES} from './voTimeline';
 
 loadFonts();
 
@@ -275,9 +276,10 @@ const CTA: React.FC = () => {
   const frame = useCurrentFrame();
   const f = frame - F.cta[0];
   if (f < 0) return null;
-  const line = (i: number) => prog(f, 10 + i * 12, 16);
-  const disc = prog(f, 72, 16);
-  const lock = prog(f, 82, 18);
+  // each line appears just as the voice-over says it
+  const line = (i: number) => prog(f, [8, 36, 66][i], 16);
+  const disc = prog(f, 108, 16);
+  const lock = prog(f, 146, 18);
   return (
     <div style={{position: 'absolute', left: 40, right: 40, top: 120, textAlign: 'center', fontFamily: DISPLAY, color: INK, zIndex: 8}}>
       <div style={{fontSize: 92, fontWeight: 700, letterSpacing: -3.6, lineHeight: 1.0}}>
@@ -287,7 +289,7 @@ const CTA: React.FC = () => {
       </div>
       <div style={{marginTop: 34, fontSize: 36, fontWeight: 500, letterSpacing: -0.5, color: '#6F685F', opacity: disc, transform: `translateY(${(1 - disc) * 14}px)`}}>Discover Family Mode with</div>
       <div style={{marginTop: 14, display: 'inline-flex', alignItems: 'center', gap: 18, opacity: lock, transform: `translateY(${(1 - lock) * 18}px) scale(${0.95 + 0.05 * lock})`}}>
-        <LogoMark size={70} ring={0.78 * prog(f, 86, 30, easeInOut)} />
+        <LogoMark size={70} ring={0.78 * prog(f, 150, 30, easeInOut)} />
         <span style={{fontSize: 64, fontWeight: 700, letterSpacing: -2.4}}>Plainweek</span>
         <span style={{fontSize: 30, fontWeight: 700, letterSpacing: 2, color: '#fff', background: ACCENT, padding: '6px 16px', borderRadius: 14, marginLeft: 2}}>PRO</span>
       </div>
@@ -314,14 +316,26 @@ const Sfx: React.FC<{at: number; src: string; volume: number}> = ({at, src, volu
     <Audio src={staticFile(src)} volume={volume} />
   </Sequence>
 );
+/** Music dips about 6 dB under each voice-over line, with short smooth ramps. */
+const musicDuck = (frame: number) => {
+  const s = frame / 30;
+  let under = 0;
+  for (const l of VO_LINES) {
+    const k = Math.min((s - (l.from - 0.25)) / 0.25, (l.to + 0.35 - s) / 0.35);
+    under = Math.max(under, Math.max(0, Math.min(1, k)));
+  }
+  return 1 - 0.5 * under;
+};
+
 const Sound: React.FC = () => (
   <>
-    <Audio src={staticFile('family/music.wav')} volume={0.85} />
+    <Audio src={staticFile('family/voiceover.wav')} volume={1} />
+    <Audio src={staticFile('family/music.wav')} volume={(f) => 0.75 * musicDuck(f)} />
     <Sfx at={KID0 + 2} src="family/sync.wav" volume={0.3} />
     <Sfx at={TICKED} src="family/tick.wav" volume={0.35} />
     <Sfx at={TICKED + 16} src="family/stars.wav" volume={0.3} />
     <Sfx at={APPROVE0 + 26} src="family/approve.wav" volume={0.3} />
-    <Sfx at={F.cta[0] + 82} src="family/shimmer.wav" volume={0.25} />
+    <Sfx at={F.cta[0] + 146} src="family/shimmer.wav" volume={0.22} />
   </>
 );
 
