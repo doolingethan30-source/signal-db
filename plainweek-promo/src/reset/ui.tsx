@@ -150,7 +150,7 @@ const tabIcon = (name: string, color: string) => {
 };
 
 /** Floating tab bar with the raised orange button over the active tab. */
-export const TabBar: React.FC<{active: 'week' | 'month'}> = ({active}) => {
+export const TabBar: React.FC<{active: 'week' | 'month' | 'family'}> = ({active}) => {
   const tabs = ['week', 'month', 'layers', 'family', 'settings'];
   const xs = [64, 140, 216, 292, 368].map((x) => x - 23);
   const ai = tabs.indexOf(active);

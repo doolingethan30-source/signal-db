@@ -140,3 +140,22 @@ Rendered file: `out/plainweek-3-minute-week.mp4` (1080×1920, 30 fps, H.264/yuv4
 - `out/posts/plainweek-post-before-after.png` (`PostBeforeAfter`): a split screen. On the left, sticky notes and a lock screen full of reminders; on the right, the balanced week, with "Same week. Less chaos."
 
 Re-render with `npx remotion still <PostSpeedrun|PostCalm|PostFamily|PostBeforeAfter> out/posts/<name>.png --image-format=png`. The source is `src/posts/Posts.tsx`.
+
+---
+
+# Family Mode for roommates (`PlainweekRoommates`, 43 s)
+
+Rendered file: `out/plainweek-roommates.mp4` (1080×1920, 30 fps, H.264/yuv420p, AAC, +faststart, -14 LUFS).
+
+| Time | Beat |
+| --- | --- |
+| 0–3 s | Hook: "4 roommates. 1 kitchen. 0 clean plates." and meet Maya (Law), Jordan (Engineering), Sam (Medicine) and Priya (Design) |
+| 3–11.6 s | Problem: the camera moves through one illustrated apartment, from the dishes piling up, to the messy lounge ("Shared spaces. Nobody's job."), to the group-chat argument ("It's not my turn."), to the forgotten paper rota |
+| 11.6–14 s | Introducing Plainweek Family Mode: "One shared home, for roommates too." |
+| 14–35 s | Use case, all on the Plainweek UI: 01 create the household "Apartment 4B" and invite roommates · 02 assign chores and turn on weekly rotation · 03 track who's done what · 04 the shared shopping list · 05 everyone's schedule for the day |
+| 35–38 s | The same apartment, clean in morning light, with all four roommates on the sofa: "Clean apartment. Happy roommates." |
+| 38–43 s | Plainweek logo, FAMILY MODE, **COMING SOON TO THE APP STORE** |
+
+- Source: `src/roommates/`. The apartment illustration is in `scenes/Apartment.tsx`; it renders the messy or clean state and evening or morning light from props. The Family Mode screens in `screens/Screens.tsx` are built from the same components as the current app (header, cards, rings, add field, floating tab bar). The film is assembled in `Roommates.tsx`.
+- Audio: `python3 -B scripts/make_roommates_audio.py` writes `public/roommates/*.wav`. It's an upbeat 116 bpm indie-pop score with three effects (a chime when roommates join, a tick on the first completed chore, and the logo shimmer).
+- The Family Mode screen layouts (household creation, invites, rotation, progress, shopping, schedule) are reconstructed in the app's design language from the brief, because only the week and month screens were available as screenshots. Swap in real screenshots or screen components to match the shipped UI exactly.
