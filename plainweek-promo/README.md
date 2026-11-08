@@ -108,3 +108,24 @@ Rendered file: `out/plainweek-family-mode.mp4` (1080×1920, 30 fps, H.264/yuv420
 - `python3 scripts/place_family_voiceover.py` cuts it into its 12 lines at the natural pauses and places each line on its shot. It writes `public/family/voiceover.wav` and `src/family/voTimeline.ts`.
 - The music ducks about 6 dB under each line. The "Family Mode." title and each call-to-action line appear as they're spoken.
 - The cut without voice-over is still at `out/plainweek-family-mode.mp4`. That file was rendered before these changes, so re-rendering now gives the new text timing.
+
+---
+
+# "The 3-minute week" (`PlainweekReset`, 30 s)
+
+A Weekly reset speedrun. A stopwatch runs live while Plainweek plans the whole of next week, and it stops at **2:41**.
+Rendered file: `out/plainweek-3-minute-week.mp4` (1080×1920, 30 fps, H.264/yuv420p, AAC, +faststart, -14 LUFS).
+
+| Time | Beat | On the phone |
+| --- | --- | --- |
+| 0–2.6 s | Hook: "Plan your whole week in 3 minutes. Start the clock." | The phone rises with this week's view |
+| 2.6–6.5 s | Step 1/5: Review last week | Tap *Weekly reset · set up next week in 3 min*; the ring fills to 12/15, with best day, streak and focus time |
+| 6.5–10 s | Step 2/5: Carry over the unfinished | Three leftover tasks, each with a suggested day, then "Move all to next week" |
+| 10–15 s | Step 3/5: Brain dump in plain English | "Call Josh fri 3pm", "Gym mon wed fri 7am", "Dentist thu 10am" and "Book flights by sunday" each become a scheduled task |
+| 15–19.5 s | Step 4/5: Balance the week | Wednesday is marked "Heavy" (7 tasks); "Balance week" moves tasks to lighter days, giving 3/3/3/3/3/1/1 |
+| 19.5–23.4 s | Step 5/5: Lock it in | The month view fills with dots across 9–15 Nov, then "Week ready · reminders set" |
+| 23 s | The clock stops at **2:41** | "Done — with 19 seconds to spare." |
+| 23.4–30 s | Finale | "Next week, fully planned in 2:41", "Weekly reset. Every Sunday.", the Plainweek logo, "Download Plainweek free" and "Available on the App Store" |
+
+- Source: `src/reset/`. The timeline and palette are in `theme.ts`, the stopwatch, hook, phone and finale in `Reset.tsx`, and the screens rebuilt from the current app UI in `screens/Screens.tsx` and `ui.tsx`.
+- Audio: `python3 scripts/make_reset_audio.py` writes `public/reset/*.wav`. It's a 124 bpm score on a ticking-clock motif that adds a layer per step and hard-stops with the clock, followed by a warm C major finale. There are only three effects (balance whoosh, done chime, logo shimmer).
