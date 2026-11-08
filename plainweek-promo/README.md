@@ -129,3 +129,11 @@ Rendered file: `out/plainweek-3-minute-week.mp4` (1080×1920, 30 fps, H.264/yuv4
 
 - Source: `src/reset/`. The timeline and palette are in `theme.ts`, the stopwatch, hook, phone and finale in `Reset.tsx`, and the screens rebuilt from the current app UI in `screens/Screens.tsx` and `ui.tsx`.
 - Audio: `python3 scripts/make_reset_audio.py` writes `public/reset/*.wav`. It's a 124 bpm score on a ticking-clock motif that adds a layer per step and hard-stops with the clock, followed by a warm C major finale. There are only three effects (balance whoosh, done chime, logo shimmer).
+
+---
+
+# Instagram posts (1080×1350, 4:5)
+- `out/posts/plainweek-post-2-41.png` (`PostSpeedrun`): the "Next week, fully planned in 2:41" poster on the dark stage, with the balanced week on the phone.
+- `out/posts/plainweek-post-calm.png` (`PostCalm`): "Your week, finally calm." with the real week view and the plain-English "Call Josh fri 3pm" entry card.
+
+Re-render with `npx remotion still <PostSpeedrun|PostCalm> out/posts/<name>.png --image-format=png`. The source is `src/posts/Posts.tsx`.
