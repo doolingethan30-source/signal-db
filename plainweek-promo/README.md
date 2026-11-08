@@ -152,7 +152,7 @@ Every behaviour shown is a Family Mode feature. The parent and child features (K
 | Time | Beat | Family Mode features shown |
 | --- | --- | --- |
 | 0–3 s | "4 roommates. 1 kitchen. 0 clean plates." | |
-| 3–10.3 s | Dishes, a messy lounge, the group-chat argument, the forgotten paper rota | |
+| 3–10.3 s | Dishes, a messy lounge, the "whose turn is it?" argument told in floating quotes (no app UI), the forgotten paper rota | |
 | 10.3–12.5 s | Introducing Plainweek Family Mode | |
 | 12.5–16.3 s | 01 Set up your apartment | Family name, a colour per person, the Organiser and Member roles, an 8-character code or link, roommates joining free on the Organiser's Pro |
 | 16.3–20.3 s | 02 Type it. Take turns. | Quick add of "Bins @Sam every tue", a repeating chore that takes turns each week, filters (person, status, group by), live sync |

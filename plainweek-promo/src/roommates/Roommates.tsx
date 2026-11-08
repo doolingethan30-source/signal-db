@@ -95,59 +95,43 @@ const CleanFilm: React.FC = () => {
   );
 };
 
-// ---------- the group chat argument ----------
-const CHAT = [
-  {id: 'maya', t: 'who left the pan in the sink AGAIN', at: 6},
-  {id: 'jordan', t: 'not me, I did the dishes monday', at: 18},
-  {id: 'sam', t: "it's literally not my turn", at: 30},
-  {id: 'priya', t: 'do we even have a rota??', at: 42},
-  {id: 'maya', t: 'we made one in september', at: 54},
+// ---------- the argument: quotes floating over the messy lounge (no app UI) ----------
+const QUOTES = [
+  {t: 'Who left the pan in the sink?', who: 'Maya', at: 4, x: 70, y: 700, r: -3},
+  {t: 'I did the dishes on Monday!', who: 'Jordan', at: 18, x: 230, y: 980, r: 2},
+  {t: 'Whose turn is the bathroom?', who: 'Priya', at: 32, x: 90, y: 1260, r: -2},
 ];
-const GroupChat: React.FC = () => {
+const Argument: React.FC = () => {
   const frame = useCurrentFrame();
   const f = frame - Q.chat[0];
-  if (f < -4 || f > Q.chat[1] - Q.chat[0] + 12) return null;
-  const k = Math.min(prog(f, -4, 14, easeInOut), 1 - prog(f, Q.chat[1] - Q.chat[0] - 4, 14, easeInOut));
+  const len = Q.chat[1] - Q.chat[0];
+  if (f < 0 || f > len + 10) return null;
+  const out = prog(f, len - 6, 12, easeInOut);
   return (
-    <div style={{position: 'absolute', left: 240, top: 520, transform: `translateY(${(1 - k) * 600}px) rotate(${(1 - k) * 8 - 2}deg)`, opacity: k, filter: 'drop-shadow(0 40px 60px rgba(0,0,0,0.45))', zIndex: 5}}>
-      <Phone width={600}>
-        <div style={{position: 'absolute', inset: 0, background: '#F2F2F4', fontFamily: UI}}>
-          <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: 128, background: 'rgba(250,250,252,0.95)', borderBottom: '1px solid #E2E2E6', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', paddingBottom: 10, gap: 4}}>
-            <div style={{display: 'flex'}}>
-              {MATES.map((m, i) => (
-                <div key={m.id} style={{marginLeft: i ? -10 : 0, border: '2px solid #fff', borderRadius: '50%'}}>
-                  <MateAvatar m={m} size={30} />
-                </div>
-              ))}
-            </div>
-            <div style={{fontSize: 13, fontWeight: 600, color: '#1F1D1A'}}>Apt 4B group chat</div>
+    <div style={{position: 'absolute', inset: 0, zIndex: 5, opacity: 1 - out}}>
+      {QUOTES.map((q) => {
+        if (f < q.at) return null;
+        const k = pop(f, q.at, 12);
+        return (
+          <div
+            key={q.t}
+            style={{
+              position: 'absolute',
+              left: q.x,
+              top: q.y,
+              transform: `rotate(${q.r}deg) scale(${0.85 + 0.15 * k}) translateY(${(1 - k) * 30}px)`,
+              opacity: Math.min(1, k * 1.5),
+              fontFamily: '"Instrument Serif", serif',
+              fontStyle: 'italic',
+              color: '#FFF8F0',
+              textShadow: '0 6px 30px rgba(0,0,0,0.55)',
+            }}
+          >
+            <div style={{fontSize: 92, lineHeight: 1.0, letterSpacing: -1}}>“{q.t}”</div>
+            <div style={{fontFamily: UI, fontStyle: 'normal', fontSize: 30, fontWeight: 700, color: '#F4A26C', marginTop: 10}}>— {q.who}</div>
           </div>
-          <div style={{position: 'absolute', left: 12, right: 12, top: 148}}>
-            {CHAT.map((c) => {
-              if (f < c.at) return null;
-              const p = pop(f, c.at, 13);
-              const mine = c.id === 'maya';
-              const m = mate(c.id);
-              return (
-                <div key={c.at} style={{display: 'flex', flexDirection: mine ? 'row-reverse' : 'row', alignItems: 'flex-end', gap: 8, marginBottom: 12, opacity: Math.min(1, p * 1.5), transform: `scale(${0.85 + 0.15 * p})`, transformOrigin: mine ? 'right bottom' : 'left bottom'}}>
-                  {!mine && <MateAvatar m={m} size={28} />}
-                  <div style={{maxWidth: 250}}>
-                    {!mine && <div style={{fontSize: 11.5, color: '#8E8E93', margin: '0 0 2px 12px'}}>{m.name}</div>}
-                    <div style={{padding: '10px 14px', borderRadius: 20, background: mine ? '#2F7CF6' : '#E5E5EA', color: mine ? '#fff' : '#1C1C1E', fontSize: 16, lineHeight: '21px'}}>{c.t}</div>
-                  </div>
-                </div>
-              );
-            })}
-            {f > 60 && (
-              <div style={{display: 'inline-flex', gap: 5, padding: '12px 16px', borderRadius: 20, background: '#E5E5EA', marginLeft: 36}}>
-                {[0, 1, 2].map((i) => (
-                  <div key={i} style={{width: 8, height: 8, borderRadius: 4, background: '#8E8E93', opacity: 0.4 + 0.6 * Math.abs(Math.sin((f + i * 5) / 6))}} />
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </Phone>
+        );
+      })}
     </div>
   );
 };
@@ -432,7 +416,7 @@ export const Roommates: React.FC = () => (
     <PhoneAct />
     <Callouts />
     <ProblemFilm />
-    <GroupChat />
+    <Argument />
     <Hook />
     <Titles />
     <EndCard />
