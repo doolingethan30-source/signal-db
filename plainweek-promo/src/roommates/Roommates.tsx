@@ -6,7 +6,20 @@ import {LogoMark} from '../launch/scenes/Hero';
 import {DISPLAY, UI} from '../launch/theme';
 import {C} from '../reset/theme';
 import {Apartment, SCENE_H, SCENE_W} from './scenes/Apartment';
-import {Chores, Household, HH_JOINS, MateAvatar, Progress, PROGRESS_TICKS, Schedule, Shopping} from './screens/Screens';
+import {
+  ChoresScreen,
+  EventsScreen,
+  FairnessScreen,
+  LockWidget,
+  MateAvatar,
+  PROOF_PHOTO,
+  ProofScreen,
+  Setup,
+  SETUP_JOINS,
+  ShoppingScreen,
+  TodayScreen,
+  WidgetsScreen,
+} from './screens/Screens';
 import {HOUSEHOLD, mate, MATES, Q} from './theme';
 
 loadFonts();
@@ -141,11 +154,14 @@ const GroupChat: React.FC = () => {
 
 // ---------- Plainweek phone (use-case act) ----------
 const SHOTS: [number, number, (f: number) => React.ReactNode, number][] = [
-  [Q.household[0], Q.household[1], (f) => <Household f={f} />, -2],
-  [Q.chores[0], Q.chores[1], (f) => <Chores f={f} />, 2],
-  [Q.progress[0], Q.progress[1], (f) => <Progress f={f} />, -2],
-  [Q.shopping[0], Q.shopping[1], (f) => <Shopping f={f} />, 2],
-  [Q.schedule[0], Q.schedule[1], (f) => <Schedule f={f} />, -1],
+  [Q.setup[0], Q.setup[1], (f) => <Setup f={f} />, -2],
+  [Q.chores[0], Q.chores[1], (f) => <ChoresScreen f={f} />, 2],
+  [Q.today[0], Q.today[1], (f) => <TodayScreen f={f} />, -2],
+  [Q.proof[0], Q.proof[1], (f) => <ProofScreen f={f} />, 2],
+  [Q.shopping[0], Q.shopping[1], (f) => <ShoppingScreen f={f} />, -2],
+  [Q.events[0], Q.events[1], (f) => <EventsScreen f={f} />, 2],
+  [Q.fairness[0], Q.fairness[1], (f) => <FairnessScreen f={f} />, -1],
+  [Q.widgets[0], Q.widgets[1], (f) => <WidgetsScreen f={f} />, 1],
 ];
 const PhoneAct: React.FC = () => {
   const frame = useCurrentFrame();
@@ -171,7 +187,7 @@ const PhoneAct: React.FC = () => {
         }}
       >
         <Phone width={600}>
-          {frame < Q.household[0] + 6 && <Household f={-20} />}
+          {frame < Q.setup[0] + 6 && <Setup f={-20} />}
           {SHOTS.map(([a, b, el], i) => {
             if (frame < a - 6 || frame > b + 8) return null;
             const inK = i === 0 ? 1 : prog(frame, a - 6, 12, easeInOut);
@@ -229,38 +245,68 @@ const Avatars: React.FC<{size?: number}> = ({size = 44}) => (
 );
 const Callouts: React.FC = () => (
   <>
-    <Callout from={Q.household[0] + HH_JOINS[2] + 4} to={Q.household[1] + 2} side="left" y={1755}>
-      <Avatars /> 4 roommates, 1 household
+    <Callout from={Q.setup[0] + SETUP_JOINS[2] + 2} to={Q.setup[1] + 2} side="left" y={1755}>
+      <Avatars size={40} /> Roommates join free on the Organiser’s Pro
     </Callout>
-    <Callout from={Q.chores[0] + 92} to={Q.chores[1] + 2} side="right" y={1755}>
-      <span style={{color: C.orange}}>↻</span> Everyone takes a turn
+    <Callout from={Q.chores[0] + 40} to={Q.chores[1] + 2} side="right" y={1755}>
+      <span style={{width: 14, height: 14, borderRadius: 7, background: '#3FAE6E', boxShadow: '0 0 0 6px rgba(63,174,110,0.2)'}} /> Live sync: everyone sees it in seconds
     </Callout>
-    <Callout from={Q.progress[0] + PROGRESS_TICKS[2] + 6} to={Q.progress[1] + 2} side="left" y={1755}>
-      <span style={{width: 34, height: 34, borderRadius: 10, background: C.orange, color: '#fff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 22}}>✓</span>3 chores done today
+    <Callout from={Q.today[0] + 84} to={Q.today[1] + 2} side="left" y={1755}>
+      <Avatars size={40} /> Spread fairly across the apartment
     </Callout>
-    <Callout from={Q.shopping[0] + 40} to={Q.shopping[1] + 2} side="right" y={1755}>
-      <MateAvatar m={mate('priya')} size={44} /> Priya added Toilet roll
+    <Callout from={Q.proof[0] + 76} to={Q.proof[1] + 2} side="right" y={1730}>
+      <div style={{display: 'flex', alignItems: 'center', gap: 14}}>
+        <LogoMark size={46} ring={0.78} />
+        <div style={{fontSize: 24, lineHeight: 1.25}}>
+          <div style={{color: '#8C867E', fontWeight: 600, fontSize: 20}}>ON SAM’S IPHONE</div>
+          Maya nudged you: Take out the bins
+        </div>
+      </div>
     </Callout>
-    <Callout from={Q.schedule[0] + 40} to={Q.schedule[1] + 2} side="left" y={1755}>
-      <Avatars size={40} /> 4 schedules, 1 view
+    <Callout from={Q.shopping[0] + 40} to={Q.shopping[1] + 2} side="left" y={1755}>
+      <span style={{color: C.orange}}>✦</span> Sorted into aisles automatically
     </Callout>
+    <Callout from={Q.events[0] + 56} to={Q.events[1] + 2} side="right" y={1755}>
+      <MateAvatar m={mate('jordan')} size={42} /> Jordan’s driving. 3 going.
+    </Callout>
+    <Callout from={Q.fairness[0] + 40} to={Q.fairness[1] + 2} side="left" y={1755}>
+      <MateAvatar m={mate('priya')} size={42} /> Top helper this week: Priya
+    </Callout>
+    <LockCallout />
   </>
 );
+
+const LockCallout: React.FC = () => {
+  const frame = useCurrentFrame();
+  const from = Q.widgets[0] + 30;
+  const to = Q.widgets[1] + 2;
+  if (frame < from || frame > to) return null;
+  const k = Math.min(pop(frame, from, 14), 1 - prog(frame, to - 10, 10));
+  return (
+    <div style={{position: 'absolute', right: 40, top: 1700, zIndex: 8, opacity: Math.min(1, k * 1.4), transform: `translateX(${(1 - Math.min(1, k)) * 80}px)`}}>
+      <div style={{fontFamily: UI, fontSize: 22, fontWeight: 700, letterSpacing: 3, color: '#8C867E', marginBottom: 8, textAlign: 'right'}}>LOCK SCREEN</div>
+      <LockWidget />
+    </div>
+  );
+};
 
 // ---------- titles ----------
 type Title = {from: number; to: number; lines: string[]; sub?: string; eyebrow?: string; dark?: boolean; top?: number; size?: number};
 const TITLES: Title[] = [
   {from: Q.dishes[0] + 4, to: Q.dishes[1] - 2, lines: ['Dishes', '*piling up.*'], dark: true},
-  {from: Q.lounge[0] + 4, to: Q.lounge[1] - 2, lines: ['Shared spaces.', '*Nobody’s job.*'], dark: true},
+  {from: Q.lounge[0] + 2, to: Q.lounge[1] - 2, lines: ['Shared spaces.', '*Nobody’s job.*'], dark: true},
   {from: Q.chat[0] + 2, to: Q.chat[1] - 2, lines: ['“It’s not', '*my turn.*”'], dark: true, top: 150},
-  {from: Q.rota[0] + 4, to: Q.rota[1] + 4, lines: ['Chores', '*forgotten.*'], dark: true},
-  {from: Q.intro[0] + 10, to: Q.intro[1] + 2, eyebrow: 'INTRODUCING', lines: ['Plainweek', '*Family Mode.*'], sub: 'One shared home, for roommates too.'},
-  {from: Q.household[0] + 4, to: Q.household[1] - 2, eyebrow: '01', lines: ['Create your', '*household.*'], sub: 'Then invite your roommates.'},
-  {from: Q.chores[0] + 4, to: Q.chores[1] - 2, eyebrow: '02', lines: ['Chores that', '*rotate.*'], sub: 'Assign once. Everyone takes a turn.'},
-  {from: Q.progress[0] + 4, to: Q.progress[1] - 2, eyebrow: '03', lines: ['See who’s', '*done what.*'], sub: 'Every completed chore, tracked.'},
-  {from: Q.shopping[0] + 4, to: Q.shopping[1] - 2, eyebrow: '04', lines: ['One shared', '*shopping list.*'], sub: 'Added by anyone. Ticked by whoever’s out.'},
-  {from: Q.schedule[0] + 4, to: Q.schedule[1] - 2, eyebrow: '05', lines: ['Everyone’s week,', '*together.*'], sub: 'Lectures, training and dinners in one view.'},
-  {from: Q.clean[0] + 10, to: Q.clean[1] + 2, lines: ['Clean apartment.', '*Happy roommates.*'], dark: true},
+  {from: Q.rota[0] + 2, to: Q.rota[1] + 4, lines: ['Chores', '*forgotten.*'], dark: true},
+  {from: Q.intro[0] + 8, to: Q.intro[1] + 2, eyebrow: 'INTRODUCING', lines: ['Plainweek', '*Family Mode.*'], sub: 'One shared home, for roommates too.'},
+  {from: Q.setup[0] + 4, to: Q.setup[1] - 2, eyebrow: '01', lines: ['Set up', '*your apartment.*'], sub: 'Invite roommates with a code or a link.'},
+  {from: Q.chores[0] + 4, to: Q.chores[1] - 2, eyebrow: '02', lines: ['Type it.', '*Take turns.*'], sub: '“Bins @Sam every tue” just works.'},
+  {from: Q.today[0] + 4, to: Q.today[1] - 2, eyebrow: '03', lines: ['One tap.', '*A fair week.*'], sub: 'Templates and “Plan our week”.'},
+  {from: Q.proof[0] + 4, to: Q.proof[1] - 2, eyebrow: '04', lines: ['Photo proof.', '*Friendly nudges.*'], sub: 'Plus comments on every chore.'},
+  {from: Q.shopping[0] + 4, to: Q.shopping[1] - 2, eyebrow: '05', lines: ['Shopping,', '*sorted by aisle.*'], sub: 'Type “2x milk, bread, bananas”.'},
+  {from: Q.events[0] + 4, to: Q.events[1] - 2, eyebrow: '06', lines: ['Who’s going?', '*Who’s driving?*'], sub: 'Shared events, colour-coded by roommate.'},
+  {from: Q.fairness[0] + 4, to: Q.fairness[1] - 2, eyebrow: '07', lines: ['Fair,', '*finally.*'], sub: 'Who’s done what, over four weeks.'},
+  {from: Q.widgets[0] + 4, to: Q.widgets[1] - 2, eyebrow: '08', lines: ['Tick it off', '*from your Home Screen.*'], sub: 'Widgets for Home and Lock Screen.'},
+  {from: Q.clean[0] + 8, to: Q.clean[1] + 2, lines: ['Clean apartment.', '*Happy roommates.*'], dark: true},
 ];
 const Line: React.FC<{text: string; k: number; accent: string}> = ({text, k, accent}) => (
   <div style={{overflow: 'hidden', paddingBottom: '0.06em'}}>
@@ -391,8 +437,8 @@ export const Roommates: React.FC = () => (
     <Titles />
     <EndCard />
     <Audio src={staticFile('roommates/music.wav')} volume={0.9} />
-    <Sfx at={Q.household[0] + HH_JOINS[0]} src="roommates/join.wav" volume={0.28} />
-    <Sfx at={Q.progress[0] + PROGRESS_TICKS[0]} src="roommates/tick.wav" volume={0.3} />
+    <Sfx at={Q.setup[0] + SETUP_JOINS[0]} src="roommates/join.wav" volume={0.28} />
+    <Sfx at={Q.proof[0] + PROOF_PHOTO + 10} src="roommates/tick.wav" volume={0.3} />
     <Sfx at={Q.end[0] + 40} src="roommates/shimmer.wav" volume={0.24} />
   </AbsoluteFill>
 );

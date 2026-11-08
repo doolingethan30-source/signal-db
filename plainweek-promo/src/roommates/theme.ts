@@ -1,21 +1,24 @@
 // Plainweek Family Mode for roommates: four students, one apartment. 43 s @ 30 fps.
 
-export const ROOM_FRAMES = 1290;
+export const ROOM_FRAMES = 1350; // 45 s
 
 export const Q = {
   hook: [0, 90], // 0–3 s        "4 roommates. 1 kitchen. 0 clean plates."
-  dishes: [90, 165], // 3–5.5    dishes piling up
-  lounge: [165, 228], // 5.5–7.6 messy shared space
-  chat: [228, 300], // 7.6–10    the group-chat argument
-  rota: [300, 348], // 10–11.6   the forgotten paper rota
-  intro: [348, 420], // 11.6–14  Plainweek Family Mode
-  household: [420, 540], // 14–18   create the household, invite roommates
-  chores: [540, 690], // 18–23   assign chores, rotate weekly
-  progress: [690, 810], // 23–27  track what's done
-  shopping: [810, 930], // 27–31  shared shopping list
-  schedule: [930, 1050], // 31–35 everyone's schedules
-  clean: [1050, 1146], // 35–38.2 the clean apartment
-  end: [1146, 1290], // 38.2–43 logo + COMING SOON TO THE APP STORE
+  dishes: [90, 150], // 3–5      dishes piling up
+  lounge: [150, 200], // 5–6.7   messy shared space
+  chat: [200, 270], // 6.7–9     the group-chat argument
+  rota: [270, 310], // 9–10.3    the forgotten paper rota
+  intro: [310, 375], // 10.3–12.5 Plainweek Family Mode
+  setup: [375, 490], // 01 family, colours, roles, invite code / link
+  chores: [490, 610], // 02 quick add + taking turns
+  today: [610, 720], // 03 Today, templates, "Plan our week"
+  proof: [720, 828], // 04 photo proof, comments, nudges
+  shopping: [828, 936], // 05 shopping list sorted into aisles
+  events: [936, 1044], // 06 calendar + who's going / who's driving
+  fairness: [1044, 1116], // 07 fairness view + weekly wins
+  widgets: [1116, 1188], // 08 Home Screen + Lock Screen widgets
+  clean: [1188, 1260], // the clean apartment
+  end: [1260, 1350], // logo + COMING SOON TO THE APP STORE
 } as const;
 
 export type Mate = {id: string; name: string; initial: string; color: string; course: string};

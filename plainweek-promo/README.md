@@ -143,19 +143,28 @@ Re-render with `npx remotion still <PostSpeedrun|PostCalm|PostFamily|PostBeforeA
 
 ---
 
-# Family Mode for roommates (`PlainweekRoommates`, 43 s)
+# Family Mode for roommates (`PlainweekRoommates`, 45 s)
 
 Rendered file: `out/plainweek-roommates.mp4` (1080×1920, 30 fps, H.264/yuv420p, AAC, +faststart, -14 LUFS).
 
-| Time | Beat |
-| --- | --- |
-| 0–3 s | Hook: "4 roommates. 1 kitchen. 0 clean plates." and meet Maya (Law), Jordan (Engineering), Sam (Medicine) and Priya (Design) |
-| 3–11.6 s | Problem: the camera moves through one illustrated apartment, from the dishes piling up, to the messy lounge ("Shared spaces. Nobody's job."), to the group-chat argument ("It's not my turn."), to the forgotten paper rota |
-| 11.6–14 s | Introducing Plainweek Family Mode: "One shared home, for roommates too." |
-| 14–35 s | Use case, all on the Plainweek UI: 01 create the household "Apartment 4B" and invite roommates · 02 assign chores and turn on weekly rotation · 03 track who's done what · 04 the shared shopping list · 05 everyone's schedule for the day |
-| 35–38 s | The same apartment, clean in morning light, with all four roommates on the sofa: "Clean apartment. Happy roommates." |
-| 38–43 s | Plainweek logo, FAMILY MODE, **COMING SOON TO THE APP STORE** |
+Every behaviour shown is a Family Mode feature. The parent and child features (Kid mode, parent approval, rewards) are left out because they don't fit roommates.
 
-- Source: `src/roommates/`. The apartment illustration is in `scenes/Apartment.tsx`; it renders the messy or clean state and evening or morning light from props. The Family Mode screens in `screens/Screens.tsx` are built from the same components as the current app (header, cards, rings, add field, floating tab bar). The film is assembled in `Roommates.tsx`.
-- Audio: `python3 -B scripts/make_roommates_audio.py` writes `public/roommates/*.wav`. It's an upbeat 116 bpm indie-pop score with three effects (a chime when roommates join, a tick on the first completed chore, and the logo shimmer).
-- The Family Mode screen layouts (household creation, invites, rotation, progress, shopping, schedule) are reconstructed in the app's design language from the brief, because only the week and month screens were available as screenshots. Swap in real screenshots or screen components to match the shipped UI exactly.
+| Time | Beat | Family Mode features shown |
+| --- | --- | --- |
+| 0–3 s | "4 roommates. 1 kitchen. 0 clean plates." | |
+| 3–10.3 s | Dishes, a messy lounge, the group-chat argument, the forgotten paper rota | |
+| 10.3–12.5 s | Introducing Plainweek Family Mode | |
+| 12.5–16.3 s | 01 Set up your apartment | Family name, a colour per person, the Organiser and Member roles, an 8-character code or link, roommates joining free on the Organiser's Pro |
+| 16.3–20.3 s | 02 Type it. Take turns. | Quick add of "Bins @Sam every tue", a repeating chore that takes turns each week, filters (person, status, group by), live sync |
+| 20.3–24 s | 03 One tap. A fair week. | Today's progress rings and quick actions, the Kitchen duty template, Up for grabs, "Plan our week" spreading chores fairly |
+| 24–27.6 s | 04 Photo proof. Friendly nudges. | A photo-proof chore (stored privately), a comment, and a long-press nudge that arrives as a push on Sam's iPhone |
+| 27.6–31.2 s | 05 Shopping, sorted by aisle. | "2x milk, bread, bananas" split into items with quantities, sorted into aisles, ticked off and cleared |
+| 31.2–34.8 s | 06 Who's going? Who's driving? | The colour-coded month calendar, and an event with time, place, notes, a weekly repeat, who's going and who's driving |
+| 34.8–37.2 s | 07 Fair, finally. | Weekly wins (chores done, perfect days, top helper) and the 4-week fairness view with its uneven-load hint |
+| 37.2–39.6 s | 08 Tick it off from your Home Screen. | The Home Screen widget (tick off your own chore) and the Lock Screen widget (next chore and star count) |
+| 39.6–42 s | "Clean apartment. Happy roommates." | |
+| 42–45 s | Plainweek logo, FAMILY MODE, **COMING SOON TO THE APP STORE** | |
+
+- Source: `src/roommates/`. The apartment illustration is in `scenes/Apartment.tsx`, the Family Mode screens built from the current app components and palette are in `screens/Screens.tsx`, and the film is assembled in `Roommates.tsx`.
+- Audio: `python3 -B scripts/make_roommates_audio.py` writes `public/roommates/*.wav`. It's a 116 bpm indie-pop score that drops into the major groove at 10.3 s, with three effects (a roommate-join chime, the photo-proof tick and the logo shimmer).
+- Screen layouts follow the app's design language. Swap in real screen components or screenshots to match the shipped Family Mode UI exactly.
