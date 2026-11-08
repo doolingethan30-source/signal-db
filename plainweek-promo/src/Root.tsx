@@ -3,7 +3,7 @@ import {Family} from './family/Family';
 import {FAMILY_FRAMES} from './family/theme';
 import {Launch, LAUNCH_FRAMES} from './launch/Launch';
 import {Reset} from './reset/Reset';
-import {Roommates} from './roommates/Roommates';
+import {Roommates, RoommatesZD} from './roommates/Roommates';
 import {ROOM_FRAMES} from './roommates/theme';
 import {RESET_FRAMES} from './reset/theme';
 import {PostBeforeAfter, PostCalm, PostFamily, PostSpeedrun} from './posts/Posts';
@@ -47,6 +47,14 @@ export const RemotionRoot: React.FC = () => (
     <Composition
       id="PlainweekRoommates"
       component={Roommates}
+      durationInFrames={ROOM_FRAMES}
+      fps={FPS}
+      width={WIDTH}
+      height={HEIGHT}
+    />
+    <Composition
+      id="PlainweekRoommatesZD"
+      component={RoommatesZD}
       durationInFrames={ROOM_FRAMES}
       fps={FPS}
       width={WIDTH}

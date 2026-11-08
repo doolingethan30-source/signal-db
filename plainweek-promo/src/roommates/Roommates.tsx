@@ -21,6 +21,7 @@ import {
   WidgetsScreen,
 } from './screens/Screens';
 import {HOUSEHOLD, mate, MATES, Q} from './theme';
+import {CameraFX, Flashes, Grade, ZDCaptions} from './ZackD';
 
 loadFonts();
 
@@ -409,6 +410,15 @@ const Sfx: React.FC<{at: number; src: string; volume: number}> = ({at, src, volu
   </Sequence>
 );
 
+const Score: React.FC = () => (
+  <>
+    <Audio src={staticFile('roommates/music.wav')} volume={0.9} />
+    <Sfx at={Q.setup[0] + SETUP_JOINS[0]} src="roommates/join.wav" volume={0.28} />
+    <Sfx at={Q.proof[0] + PROOF_PHOTO + 10} src="roommates/tick.wav" volume={0.3} />
+    <Sfx at={Q.end[0] + 40} src="roommates/shimmer.wav" volume={0.24} />
+  </>
+);
+
 export const Roommates: React.FC = () => (
   <AbsoluteFill style={{overflow: 'hidden'}}>
     <Stage />
@@ -420,9 +430,30 @@ export const Roommates: React.FC = () => (
     <Hook />
     <Titles />
     <EndCard />
-    <Audio src={staticFile('roommates/music.wav')} volume={0.9} />
-    <Sfx at={Q.setup[0] + SETUP_JOINS[0]} src="roommates/join.wav" volume={0.28} />
-    <Sfx at={Q.proof[0] + PROOF_PHOTO + 10} src="roommates/tick.wav" volume={0.3} />
-    <Sfx at={Q.end[0] + 40} src="roommates/shimmer.wav" volume={0.24} />
+    <Score />
+  </AbsoluteFill>
+);
+
+/**
+ * Zack D Films–style cut: same story and screens, but narration captions instead
+ * of title cards, punch-in zooms, shakes, flashes and a punchier grade.
+ */
+export const RoommatesZD: React.FC = () => (
+  <AbsoluteFill style={{overflow: 'hidden', background: '#000'}}>
+    <CameraFX>
+      <Stage />
+      <CleanFilm />
+      <PhoneAct />
+      <ProblemFilm />
+      <Argument />
+    </CameraFX>
+    <Grade />
+    <ZDCaptions />
+    <Flashes />
+    <EndCard />
+    <Score />
+    <Sfx at={0} src="launch/thud.wav" volume={0.35} />
+    <Sfx at={Q.intro[0] - 6} src="reset/whoosh.wav" volume={0.3} />
+    <Sfx at={Q.clean[0] - 6} src="reset/whoosh.wav" volume={0.3} />
   </AbsoluteFill>
 );
