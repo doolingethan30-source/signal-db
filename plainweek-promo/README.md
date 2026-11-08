@@ -136,4 +136,7 @@ Rendered file: `out/plainweek-3-minute-week.mp4` (1080×1920, 30 fps, H.264/yuv4
 - `out/posts/plainweek-post-2-41.png` (`PostSpeedrun`): the "Next week, fully planned in 2:41" poster on the dark stage, with the balanced week on the phone.
 - `out/posts/plainweek-post-calm.png` (`PostCalm`): "Your week, finally calm." with the real week view and the plain-English "Call Josh fri 3pm" entry card.
 
-Re-render with `npx remotion still <PostSpeedrun|PostCalm> out/posts/<name>.png --image-format=png`. The source is `src/posts/Posts.tsx`.
+- `out/posts/plainweek-post-family.png` (`PostFamily`): Family Mode on full-bleed orange, "One home. One plan. A happier family.", with Mum's and Ava's iPhones and a "Synced instantly" pill.
+- `out/posts/plainweek-post-before-after.png` (`PostBeforeAfter`): a split screen. On the left, sticky notes and a lock screen full of reminders; on the right, the balanced week, with "Same week. Less chaos."
+
+Re-render with `npx remotion still <PostSpeedrun|PostCalm|PostFamily|PostBeforeAfter> out/posts/<name>.png --image-format=png`. The source is `src/posts/Posts.tsx`.

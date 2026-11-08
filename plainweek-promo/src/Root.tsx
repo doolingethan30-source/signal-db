@@ -4,7 +4,7 @@ import {FAMILY_FRAMES} from './family/theme';
 import {Launch, LAUNCH_FRAMES} from './launch/Launch';
 import {Reset} from './reset/Reset';
 import {RESET_FRAMES} from './reset/theme';
-import {PostCalm, PostSpeedrun} from './posts/Posts';
+import {PostBeforeAfter, PostCalm, PostFamily, PostSpeedrun} from './posts/Posts';
 import {Promo} from './Promo';
 import {DURATION, FPS, HEIGHT, WIDTH} from './theme';
 
@@ -44,5 +44,7 @@ export const RemotionRoot: React.FC = () => (
     />
     <Still id="PostSpeedrun" component={PostSpeedrun} width={1080} height={1350} />
     <Still id="PostCalm" component={PostCalm} width={1080} height={1350} />
+    <Still id="PostFamily" component={PostFamily} width={1080} height={1350} />
+    <Still id="PostBeforeAfter" component={PostBeforeAfter} width={1080} height={1350} />
   </>
 );

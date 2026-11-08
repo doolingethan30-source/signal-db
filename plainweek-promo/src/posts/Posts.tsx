@@ -4,6 +4,8 @@ import {Phone} from '../components/Phone';
 import {loadFonts} from '../fonts';
 import {LogoMark} from '../launch/scenes/Hero';
 import {DISPLAY, UI} from '../launch/theme';
+import {KidDay} from '../family/screens/Kid';
+import {FamilyHub, HubState, MumLock} from '../family/screens/Parent';
 import {NextWeek, ThisWeek} from '../reset/screens/Screens';
 import {C} from '../reset/theme';
 
@@ -89,5 +91,121 @@ export const PostCalm: React.FC = () => (
       <span style={{fontSize: 60, fontWeight: 700, letterSpacing: -2.2}}>Plainweek</span>
     </div>
     <div style={{position: 'absolute', left: 64, top: 1176, fontSize: 30, fontWeight: 500, color: '#6F685F'}}>Free on the App Store</div>
+  </AbsoluteFill>
+);
+
+// ---------------------------------------------------------------------------
+// Post 3 — Family Mode on full-bleed orange.
+const HUB: HubState = {
+  rings: {mum: 5 / 6, dad: 3 / 4, ava: 3 / 4, leo: 2 / 3},
+  stars: {mum: 0, dad: 0, ava: 15, leo: 9},
+  highlight: {id: 'ava', k: 1, text: 'Tidy your room ✓ +3 stars'},
+};
+
+export const PostFamily: React.FC = () => (
+  <AbsoluteFill style={{background: 'linear-gradient(160deg, #E58C58 0%, #DA7A44 45%, #C9642C 100%)', overflow: 'hidden', fontFamily: DISPLAY}}>
+    <AbsoluteFill style={{background: 'radial-gradient(60% 40% at 20% 10%, rgba(255,235,215,0.35) 0%, rgba(255,235,215,0) 70%)'}} />
+    <div style={{position: 'absolute', left: 80, right: 80, top: 80}}>
+      <div style={{fontSize: 26, fontWeight: 700, letterSpacing: 6, color: 'rgba(255,245,235,0.85)'}}>PLAINWEEK PRO · FAMILY MODE</div>
+      <div style={{marginTop: 22, fontSize: 112, fontWeight: 700, letterSpacing: -4.8, lineHeight: 0.98, color: '#FFF6EC'}}>
+        One home.
+        <br />
+        One plan.
+        <br />
+        <span style={{color: '#2A1A10'}}>A happier family.</span>
+      </div>
+    </div>
+    <div style={{position: 'absolute', left: 70, top: 560, transform: 'rotate(-6deg) scale(0.62)', transformOrigin: 'top left', filter: 'drop-shadow(0 40px 50px rgba(80,30,5,0.35))'}}>
+      <Phone width={600}>
+        <FamilyHub s={HUB} />
+      </Phone>
+    </div>
+    <div style={{position: 'absolute', left: 640, top: 600, transform: 'rotate(6deg) scale(0.62)', transformOrigin: 'top left', filter: 'drop-shadow(0 40px 50px rgba(80,30,5,0.35))'}}>
+      <Phone width={600}>
+        <KidDay f={140} />
+      </Phone>
+    </div>
+    <div style={{position: 'absolute', left: 0, right: 0, top: 486, display: 'flex', justifyContent: 'center'}}>
+      <span style={{display: 'inline-flex', alignItems: 'center', gap: 12, padding: '16px 30px', borderRadius: 40, background: '#fff', boxShadow: '0 16px 36px rgba(80,30,5,0.3)', fontFamily: UI, fontSize: 32, fontWeight: 700, color: '#1F1D1A'}}>
+        <span style={{width: 16, height: 16, borderRadius: 8, background: '#3FAE6E', boxShadow: '0 0 0 6px rgba(63,174,110,0.2)'}} />
+        Synced instantly
+      </span>
+    </div>
+  </AbsoluteFill>
+);
+
+// ---------------------------------------------------------------------------
+// Post 4 — Before / After split.
+const NOTES: {x: number; y: number; r: number; text: string; color: string}[] = [
+  {x: 30, y: 210, r: -8, text: 'Bins out??', color: '#F6E39A'},
+  {x: 330, y: 250, r: 7, text: 'Dentist 2:30!!', color: '#F7C6C0'},
+  {x: 20, y: 640, r: 6, text: 'call mum back', color: '#C9DDF5'},
+  {x: 340, y: 760, r: -9, text: 'PAY RENT', color: '#F6E39A'},
+  {x: 50, y: 900, r: -4, text: 'permission slip?', color: '#CFE6C4'},
+];
+
+export const PostBeforeAfter: React.FC = () => (
+  <AbsoluteFill style={{overflow: 'hidden', fontFamily: DISPLAY}}>
+    {/* before */}
+    <div style={{position: 'absolute', left: 0, top: 0, width: 540, height: 1130, background: 'linear-gradient(180deg, #2B2724 0%, #1C1916 100%)', overflow: 'hidden'}}>
+      <div style={{position: 'absolute', left: 80, top: 330, transform: 'rotate(-5deg) scale(0.62)', transformOrigin: 'top left', filter: 'drop-shadow(0 30px 40px rgba(0,0,0,0.5)) saturate(0.85)'}}>
+        <Phone width={600}>
+          <MumLock f={140} />
+        </Phone>
+      </div>
+      {NOTES.map((n, i) => (
+        <div
+          key={i}
+          style={{
+            position: 'absolute',
+            left: n.x,
+            top: n.y,
+            width: 190,
+            minHeight: 150,
+            padding: '26px 20px 16px',
+            background: n.color,
+            transform: `rotate(${n.r}deg)`,
+            boxShadow: '0 14px 26px rgba(0,0,0,0.35)',
+            fontFamily: '"Instrument Serif", serif',
+            fontStyle: 'italic',
+            fontSize: 36,
+            lineHeight: '38px',
+            color: '#3E352B',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div style={{position: 'absolute', left: '50%', top: -10, width: 22, height: 22, marginLeft: -11, borderRadius: 11, background: '#C9573E'}} />
+          {n.text}
+        </div>
+      ))}
+      <div style={{position: 'absolute', left: 0, right: 0, top: 70, textAlign: 'center', fontSize: 40, fontWeight: 700, letterSpacing: 8, color: '#E9DFD3'}}>BEFORE</div>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 128, textAlign: 'center', fontSize: 28, fontWeight: 500, color: '#9A9086'}}>notes, pings, panic</div>
+    </div>
+    {/* after */}
+    <div style={{position: 'absolute', left: 540, top: 0, width: 540, height: 1130, background: 'linear-gradient(180deg, #FBF8F3 0%, #F4EADF 100%)', overflow: 'hidden'}}>
+      <AbsoluteFill style={{background: 'radial-gradient(70% 40% at 50% 60%, rgba(218,122,68,0.18) 0%, rgba(218,122,68,0) 70%)'}} />
+      <div style={{position: 'absolute', left: 84, top: 230, transform: 'scale(0.62)', transformOrigin: 'top left', filter: 'drop-shadow(0 30px 40px rgba(90,60,30,0.25))'}}>
+        <Phone width={600}>
+          <NextWeek f={200} />
+        </Phone>
+      </div>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 70, textAlign: 'center', fontSize: 40, fontWeight: 700, letterSpacing: 8, color: '#1F1D1A'}}>AFTER</div>
+      <div style={{position: 'absolute', left: 0, right: 0, top: 128, textAlign: 'center', fontSize: 28, fontWeight: 500, color: '#8C867E'}}>one calm week</div>
+    </div>
+    {/* divider */}
+    <div style={{position: 'absolute', left: 538, top: 0, width: 4, height: 1130, background: C.orange}} />
+    <div style={{position: 'absolute', left: 500, top: 520, width: 80, height: 80, borderRadius: 40, background: C.orange, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 26px rgba(0,0,0,0.3)'}}>
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M5 12h13M13 6l6 6-6 6" />
+      </svg>
+    </div>
+    {/* footer */}
+    <div style={{position: 'absolute', left: 0, right: 0, top: 1130, height: 220, background: '#141210', display: 'flex', alignItems: 'center', padding: '0 70px', gap: 22}}>
+      <LogoMark size={88} ring={0.78} />
+      <div>
+        <div style={{fontSize: 58, fontWeight: 700, letterSpacing: -2.2, color: '#F6F1EA'}}>Same week. Less chaos.</div>
+        <div style={{fontSize: 30, fontWeight: 500, color: '#A39A8F', marginTop: 4}}>Plainweek · the calm weekly planner for iPhone</div>
+      </div>
+    </div>
   </AbsoluteFill>
 );
