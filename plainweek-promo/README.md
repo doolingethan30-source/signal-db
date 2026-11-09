@@ -168,3 +168,13 @@ Every behaviour shown is a Family Mode feature. The parent and child features (K
 - Source: `src/roommates/`. The apartment illustration is in `scenes/Apartment.tsx`, the Family Mode screens built from the current app components and palette are in `screens/Screens.tsx`, and the film is assembled in `Roommates.tsx`.
 - Audio: `python3 -B scripts/make_roommates_audio.py` writes `public/roommates/*.wav`. It's a 116 bpm indie-pop score that drops into the major groove at 10.3 s, with three effects (a roommate-join chime, the photo-proof tick and the logo shimmer).
 - Screen layouts follow the app's design language. Swap in real screen components or screenshots to match the shipped Family Mode UI exactly.
+
+### Zack D Films–style cut: `out/plainweek-roommates-zackd.mp4` (`PlainweekRoommatesZD`, 45 s)
+Same story and Family Mode screens, re-edited in the Zack D Films short-form style:
+- A curiosity-gap hook ("This is what happens when four roommates share one kitchen.").
+- Narration captions in bold white with heavy outlines and yellow keywords, in place of the title cards.
+- A snap punch-in zoom on every cut, screen shakes on the problem beats, and white flashes into and out of the solution.
+- A punchier grade with vignette and film grain.
+- Three extra effects (an impact on the hook and two whooshes).
+
+The editing layer is in `src/roommates/ZackD.tsx`, and the caption text in `ZD_CAPTIONS` doubles as a voice-over script.
