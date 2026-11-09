@@ -178,3 +178,9 @@ Same story and Family Mode screens, re-edited in the Zack D Films short-form sty
 - Three extra effects (an impact on the hook and two whooshes).
 
 The editing layer is in `src/roommates/ZackD.tsx`, and the caption text in `ZD_CAPTIONS` doubles as a voice-over script.
+
+### Zack D cut with voice-over: `out/plainweek-roommates-zackd-vo.mp4` (45 s)
+- Source: `public/roommates/voiceover-source.mp3` (ElevenLabs, Liam).
+- `python3 scripts/place_roommates_voiceover.py` cuts it into 25 phrases at the natural pauses and places each on its shot. It writes `public/roommates/voiceover.wav` and `src/roommates/voTimeline.ts`.
+- The roommates timeline (`Q` in `theme.ts`) is timed to the narration. The Zack D captions are generated from the VO phrases, the music ducks about 6 dB under the voice, and the score drops on "So they tried Plainweek Family Mode".
+- The earlier Zack D cut without voice-over (`plainweek-roommates-zackd.mp4`) and the clean cut (`plainweek-roommates.mp4`) were rendered on the previous timing. Re-rendering them now uses the new one.
