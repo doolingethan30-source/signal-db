@@ -2,23 +2,25 @@
 
 export const ROOM_FRAMES = 1350; // 45 s
 
+// Timed to the voice-over (Liam): the problem act follows his delivery, and
+// each feature shot is long enough for its animation to finish.
 export const Q = {
-  hook: [0, 90], // 0–3 s        "4 roommates. 1 kitchen. 0 clean plates."
-  dishes: [90, 150], // 3–5      dishes piling up
-  lounge: [150, 200], // 5–6.7   messy shared space
-  chat: [200, 270], // 6.7–9     the group-chat argument
-  rota: [270, 310], // 9–10.3    the forgotten paper rota
-  intro: [310, 375], // 10.3–12.5 Plainweek Family Mode
-  setup: [375, 490], // 01 family, colours, roles, invite code / link
-  chores: [490, 610], // 02 quick add + taking turns
-  today: [610, 720], // 03 Today, templates, "Plan our week"
-  proof: [720, 828], // 04 photo proof, comments, nudges
-  shopping: [828, 936], // 05 shopping list sorted into aisles
-  events: [936, 1044], // 06 calendar + who's going / who's driving
-  fairness: [1044, 1116], // 07 fairness view + weekly wins
-  widgets: [1116, 1188], // 08 Home Screen + Lock Screen widgets
-  clean: [1188, 1260], // the clean apartment
-  end: [1260, 1350], // logo + COMING SOON TO THE APP STORE
+  hook: [0, 100], // 0–3.3 s     "This is what happens when four roommates share one kitchen."
+  dishes: [100, 162], // 3.3–5.4  "The dishes pile up for days…"
+  lounge: [162, 228], // 5.4–7.6  "shared spaces become nobody's job…"
+  chat: [228, 300], // 7.6–10     "and every chore turns into an argument."
+  rota: [300, 380], // 10–12.7    "The paper rota? Forgotten by week two."
+  intro: [380, 445], // 12.7–14.8 "So they tried Plainweek Family Mode."
+  setup: [445, 552], // 01 family, colours, roles, invite code / link
+  chores: [552, 660], // 02 quick add + taking turns
+  today: [660, 764], // 03 Today, templates, "Plan our week"
+  proof: [764, 866], // 04 photo proof, comments, nudges
+  shopping: [866, 968], // 05 shopping list sorted into aisles
+  events: [968, 1062], // 06 calendar + who's going / who's driving
+  fairness: [1062, 1132], // 07 fairness view + weekly wins
+  widgets: [1132, 1202], // 08 Home Screen + Lock Screen widgets
+  clean: [1202, 1264], // the clean apartment
+  end: [1264, 1350], // logo + COMING SOON TO THE APP STORE
 } as const;
 
 export type Mate = {id: string; name: string; initial: string; color: string; course: string};

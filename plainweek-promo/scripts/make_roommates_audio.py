@@ -5,12 +5,12 @@ Writes WAVs to public/roommates/. Run: python3 scripts/make_roommates_audio.py
 
 Music map (seconds), 116 bpm:
   0–3      hook: punchy plucked riff + kick in A minor
-  3–10.3   problem: playful, slightly off-kilter staccato (Am – Em – F – G);
+  3–12.7   problem: playful, slightly off-kilter staccato (Am – Em – F – G);
            thins out for the group-chat argument, breakdown + riser at 10 s
-  10.3     Family Mode: drops into a bright major groove (C – G – Am – F) with
-           claps, shaker, bass and strummed plucks; a bell hook from 16 s
-  39.6–42  clean apartment: full and warm
-  42–45    end card: final hit and a wide sustained chord
+  12.7     Family Mode: drops into a bright major groove (C – G – Am – F) with
+           claps, shaker, bass and strummed plucks; a bell hook from 18.4 s
+  40–42.1  clean apartment: full and warm
+  42.1–45  end card: final hit and a wide sustained chord
 """
 import os
 import sys
@@ -29,8 +29,8 @@ DUR = 45.0
 N = int(SR * DUR)
 BEAT = 60 / 116
 BAR = BEAT * 4
-DROP = 10.33
-END = 42.0
+DROP = 12.67
+END = 42.13
 
 
 def strum(notes, at, buf, gain=0.05, spread=0.018, d=0.5):
@@ -82,17 +82,17 @@ def music():
     major = [[48, 55, 60, 64, 67], [43, 55, 59, 62, 67], [45, 57, 60, 64, 69], [41, 57, 60, 65, 69]]
 
     # hook + problem (0–10 s): minor, a little off-balance
-    groove(0.0, 6.67, minor, full=False, claps=False, hats=True, kick_g=0.26)
+    groove(0.0, 7.6, minor, full=False, claps=False, hats=True, kick_g=0.26)
     # staccato "tiptoe" piano over the problem
     t0 = 0.0
     motif = [76, 72, 74, 71, 72, 69, 71, 67]
     i = 0
-    while t0 < 6.6:
+    while t0 < 7.5:
         place(keys, fa.piano(hz(motif[i % 8]), 0.4, 0.8), t0, 0.05)
         t0 += BEAT / 2 if i % 4 != 3 else BEAT
         i += 1
     # the group chat (7.6–10): drums thin out, just bass + plucks
-    groove(6.67, 9.0, minor[2:] + minor[:2], full=False, claps=False, hats=False, kick_g=0.0)
+    groove(7.6, DROP - 1.6, minor[2:] + minor[:2], full=False, claps=False, hats=False, kick_g=0.0)
     # breakdown + riser into the drop (10–11.6)
     r = tt(1.6)
     place(drums, fft_filter(rng.normal(0, 1, len(r)), lo=700, hi=10000) * (r / 1.6) ** 3 * 0.14, DROP - 1.6)
@@ -106,7 +106,7 @@ def music():
         place(keys, fa.bell(hz(m), 2.0, 0.8), DROP + j * 0.04, 0.06)
     groove(DROP, END, major, full=True)
     hook = [(0, 76), (0.5, 79), (1, 81), (1.5, 79), (2, 76), (3, 74), (3.5, 76), (4, 72), (6, 74), (6.5, 76), (7, 79)]
-    hs = 16.0
+    hs = 18.4
     while hs < END - 1:
         for off, m in hook:
             when = hs + off * BEAT

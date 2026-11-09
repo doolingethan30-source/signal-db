@@ -2,30 +2,21 @@ import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import {easeInOut, pop, prog} from '../anim';
 import {DISPLAY} from '../launch/theme';
 import {Q} from './theme';
+import {VO_LINES} from './voTimeline';
 
 // Zack D Films–style editing layer for the roommates film: a curiosity-gap hook,
 // word-by-word narration captions, punch-in zooms on every cut, screen shake on
 // the problem beats, flash transitions and a punchier grade with film grain.
 
 type Cap = {from: number; to: number; text: string; pos: 'mid' | 'top'};
-// *word* = highlighted keyword
-export const ZD_CAPTIONS: Cap[] = [
-  {from: 4, to: Q.dishes[0], text: 'This is what happens when *four* *roommates* share *one* *kitchen.*', pos: 'mid'},
-  {from: Q.dishes[0], to: Q.lounge[0], text: 'The *dishes* pile up for days…', pos: 'mid'},
-  {from: Q.lounge[0], to: Q.chat[0], text: 'shared spaces become *nobody’s* *job…*', pos: 'mid'},
-  {from: Q.chat[0], to: Q.rota[0], text: 'and every chore turns into an *argument.*', pos: 'top'},
-  {from: Q.rota[0], to: Q.intro[0], text: 'The paper rota? *Forgotten* by week two.', pos: 'mid'},
-  {from: Q.intro[0] + 4, to: Q.setup[0], text: 'So they tried *Plainweek* *Family* *Mode.*', pos: 'top'},
-  {from: Q.setup[0], to: Q.chores[0], text: 'One shared apartment. Everyone joins with a *code.*', pos: 'top'},
-  {from: Q.chores[0], to: Q.today[0], text: 'Type “bins at Sam every Tuesday” and chores *take* *turns.*', pos: 'top'},
-  {from: Q.today[0], to: Q.proof[0], text: 'One tap plans the whole week. *Fairly.*', pos: 'top'},
-  {from: Q.proof[0], to: Q.shopping[0], text: 'Done? Snap a *photo.* Forgot? Get a *nudge.*', pos: 'top'},
-  {from: Q.shopping[0], to: Q.events[0], text: 'The shopping list sorts itself *by* *aisle.*', pos: 'top'},
-  {from: Q.events[0], to: Q.fairness[0], text: 'Everyone knows who’s going… and who’s *driving.*', pos: 'top'},
-  {from: Q.fairness[0], to: Q.widgets[0], text: 'And nobody can claim they did *more.*', pos: 'top'},
-  {from: Q.widgets[0], to: Q.clean[0], text: 'Tick chores off right from your *Home* *Screen.*', pos: 'top'},
-  {from: Q.clean[0], to: Q.end[0], text: 'Now the apartment *stays* *clean.*', pos: 'top'},
-];
+// Captions follow the voice-over phrase by phrase (*word* = highlighted keyword).
+export const ZD_CAPTIONS: Cap[] = VO_LINES.map((l, i) => {
+  const next = VO_LINES[i + 1];
+  const from = Math.round(l.from * 30);
+  // hold each caption until the next phrase starts (max 0.6 s after it ends)
+  const to = Math.round(Math.min(next ? next.from : l.to + 0.6, l.to + 0.6) * 30);
+  return {from, to, text: l.text, pos: from < Q.intro[0] ? 'mid' : 'top'};
+});
 
 const YELLOW = '#FFD23F';
 const CHUNK = 3;
@@ -36,7 +27,8 @@ export const ZDCaptions: React.FC = () => {
   const cap = ZD_CAPTIONS.find((c) => frame >= c.from && frame < c.to);
   if (!cap) return null;
   const words = cap.text.split(' ');
-  const span = cap.to - cap.from - 6;
+  const spoken = VO_LINES.find((l) => Math.round(l.from * 30) === cap.from);
+  const span = Math.max(6, (spoken ? spoken.to * 30 : cap.to) - cap.from - 4);
   const per = span / words.length;
   const idx = Math.min(words.length - 1, Math.floor((frame - cap.from) / per));
   const chunkStart = Math.floor(idx / CHUNK) * CHUNK;

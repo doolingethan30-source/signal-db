@@ -22,6 +22,7 @@ import {
 } from './screens/Screens';
 import {HOUSEHOLD, mate, MATES, Q} from './theme';
 import {CameraFX, Flashes, Grade, ZDCaptions} from './ZackD';
+import {VO_LINES} from './voTimeline';
 
 loadFonts();
 
@@ -438,6 +439,17 @@ export const Roommates: React.FC = () => (
  * Zack D Films–style cut: same story and screens, but narration captions instead
  * of title cards, punch-in zooms, shakes, flashes and a punchier grade.
  */
+/** Music dips about 6 dB under each voice-over phrase, with short ramps. */
+const duckUnderVO = (frame: number) => {
+  const t = frame / 30;
+  let under = 0;
+  for (const l of VO_LINES) {
+    const k = Math.min((t - (l.from - 0.2)) / 0.2, (l.to + 0.3 - t) / 0.3);
+    under = Math.max(under, Math.max(0, Math.min(1, k)));
+  }
+  return 1 - 0.5 * under;
+};
+
 export const RoommatesZD: React.FC = () => (
   <AbsoluteFill style={{overflow: 'hidden', background: '#000'}}>
     <CameraFX>
@@ -451,7 +463,11 @@ export const RoommatesZD: React.FC = () => (
     <ZDCaptions />
     <Flashes />
     <EndCard />
-    <Score />
+    <Audio src={staticFile('roommates/voiceover.wav')} volume={1} />
+    <Audio src={staticFile('roommates/music.wav')} volume={(f) => 0.75 * duckUnderVO(f)} />
+    <Sfx at={Q.setup[0] + SETUP_JOINS[0]} src="roommates/join.wav" volume={0.22} />
+    <Sfx at={Q.proof[0] + PROOF_PHOTO + 10} src="roommates/tick.wav" volume={0.24} />
+    <Sfx at={Q.end[0] + 40} src="roommates/shimmer.wav" volume={0.2} />
     <Sfx at={0} src="launch/thud.wav" volume={0.35} />
     <Sfx at={Q.intro[0] - 6} src="reset/whoosh.wav" volume={0.3} />
     <Sfx at={Q.clean[0] - 6} src="reset/whoosh.wav" volume={0.3} />
