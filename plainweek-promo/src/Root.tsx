@@ -2,6 +2,7 @@ import {Composition, Still} from 'remotion';
 import {Family} from './family/Family';
 import {FAMILY_FRAMES} from './family/theme';
 import {Launch, LAUNCH_FRAMES} from './launch/Launch';
+import {LOOP, LoopAd, LoopSeamTest} from './loop/Loop';
 import {Reset} from './reset/Reset';
 import {Roommates, RoommatesZD} from './roommates/Roommates';
 import {ROOM_FRAMES} from './roommates/theme';
@@ -60,6 +61,8 @@ export const RemotionRoot: React.FC = () => (
       width={WIDTH}
       height={HEIGHT}
     />
+    <Composition id="PlainweekLoop" component={LoopAd} durationInFrames={LOOP} fps={FPS} width={WIDTH} height={HEIGHT} />
+    <Composition id="PlainweekLoopSeamTest" component={LoopSeamTest} durationInFrames={LOOP * 2} fps={FPS} width={WIDTH} height={HEIGHT} />
     <Still id="PostSpeedrun" component={PostSpeedrun} width={1080} height={1350} />
     <Still id="PostCalm" component={PostCalm} width={1080} height={1350} />
     <Still id="PostFamily" component={PostFamily} width={1080} height={1350} />

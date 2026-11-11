@@ -184,3 +184,27 @@ The editing layer is in `src/roommates/ZackD.tsx`, and the caption text in `ZD_C
 - `python3 scripts/place_roommates_voiceover.py` cuts it into 25 phrases at the natural pauses and places each on its shot. It writes `public/roommates/voiceover.wav` and `src/roommates/voTimeline.ts`.
 - The roommates timeline (`Q` in `theme.ts`) is timed to the narration. The Zack D captions are generated from the VO phrases, the music ducks about 6 dB under the voice, and the score drops on "So they tried Plainweek Family Mode".
 - The earlier Zack D cut without voice-over (`plainweek-roommates-zackd.mp4`) and the clean cut (`plainweek-roommates.mp4`) were rendered on the previous timing. Re-rendering them now uses the new one.
+
+---
+
+# Seamless 15 s launch loop (`PlainweekLoop`)
+
+Rendered file: `out/plainweek-loop-15s.mp4` (1080×1920, 30 fps, exactly 450 frames, H.264/yuv420p, AAC, +faststart).
+
+| Time | Beat |
+| --- | --- |
+| 0–2.5 s | Chaos: notifications, overdue tasks and badges swirl around "Your week feels like this?" |
+| 2.5–3.6 s | Everything collapses into the iPhone and the stage turns warm and light |
+| 3.6–5 s | "Your whole week. Finally calm.": the week view, with rings drawing on |
+| 5–7.2 s | "Just type it.": "Call Josh fri 3pm" is parsed and lands on Friday |
+| 7.2–9.2 s | "Too much on one day? Balanced in a tap.": the Weekly reset spreads a heavy Wednesday |
+| 9.2–11.2 s | "Share the load with family.": Family Mode progress rings and stars |
+| 11.2–14.2 s | Plainweek · **FREE TO DOWNLOAD NOW · ON THE APP STORE** |
+| 14.2–15 s | The chaos floods back in over the call to action, straight into frame 0 |
+
+**How the loop is seamless**
+- Every animation is a function of cyclic time (`frame % 450`), and all drift uses whole-number sine cycles over the loop.
+- The CTA → chaos transition is part of the cycle, so the last frame leads into the first.
+- Music: 128 bpm, so 15 s is exactly 8 bars. Every note is written into two passes and the second is exported, so reverb tails and the riser wrap around the loop point (`scripts/make_loop_audio.py`).
+- The final encode uses a fixed gain (no dynamic loudness normalisation), so the audio level is identical at both ends.
+- Verified: in `PlainweekLoopSeamTest` (two loops back to back) frame 450 is pixel-identical to frame 0, and in the encoded file the frame step across the seam matches its neighbours.
