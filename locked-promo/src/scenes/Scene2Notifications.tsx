@@ -4,10 +4,10 @@ import {Glyph} from '../components/Icons';
 import {content} from '../content';
 import {colors, SNAP} from '../theme';
 
-const INTERVAL = 6; // a new notification every 6 frames (5 per second)
+const INTERVAL = 5; // a new notification every 5 frames (6 per second)
 const CARD_H = 156;
 const GAP = 18;
-const FREEZE = 92;
+const FREEZE = 80;
 
 export const Scene2Notifications: React.FC = () => {
   const frame = useCurrentFrame();

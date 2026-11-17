@@ -1,6 +1,7 @@
 import React from 'react';
 import {content} from '../content';
 import {colors} from '../theme';
+import {ShieldBlock} from './Icons';
 import {Lockup} from './LogoMark';
 import {formatMinutes, Ring} from './Ring';
 
@@ -208,9 +209,36 @@ export const HomeScreen: React.FC<{usedMinutes: number; reveal?: number; limitHi
         ))}
       </div>
 
+      <Card
+        style={{
+          ...block(2.0),
+          marginTop: 18,
+          padding: '22px 28px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 20,
+        }}
+      >
+        <ShieldBlock size={40} color={colors.white} accent={colors.card} />
+        <span style={{flex: 1, color: colors.white, fontSize: 28, fontWeight: 700}}>{hs.filterLine}</span>
+        <span
+          style={{
+            fontSize: 22,
+            fontWeight: 800,
+            letterSpacing: '0.12em',
+            color: colors.bg,
+            background: colors.yellow,
+            padding: '8px 18px',
+            borderRadius: 999,
+          }}
+        >
+          {hs.filterStatus}
+        </span>
+      </Card>
+
       <div
         style={{
-          ...block(2.2),
+          ...block(2.4),
           marginTop: 22,
           display: 'flex',
           alignItems: 'center',

@@ -10,6 +10,7 @@ import {Scene2Notifications} from './scenes/Scene2Notifications';
 import {Scene3Headline} from './scenes/Scene3Headline';
 import {Scene4Home} from './scenes/Scene4Home';
 import {Scene5Lockout} from './scenes/Scene5Lockout';
+import {Scene5bAdultBlock} from './scenes/Scene5bAdultBlock';
 import {Scene6Features} from './scenes/Scene6Features';
 import {Scene7Logo} from './scenes/Scene7Logo';
 import {colors, FONT, FULL, SHORT, TRANSITION} from './theme';
@@ -34,7 +35,7 @@ const Frame: React.FC<{children: React.ReactNode} & AudioProps> = ({children, ha
   </AbsoluteFill>
 );
 
-/** Full 30s cut. Hard cuts 1→2→3, smooth crossfades 3→4→5→6→7. */
+/** Full 30s cut. Hard cuts 1→2→3, smooth crossfades 3→4→5→5B→6→7. */
 export const LockedPromo: React.FC<AudioProps> = (props) => (
   <Frame {...props}>
     <TransitionSeries>
@@ -55,6 +56,10 @@ export const LockedPromo: React.FC<AudioProps> = (props) => (
       <TransitionSeries.Sequence durationInFrames={FULL.s5} name="5 Lockout">
         <Scene5Lockout duration={FULL.s5} />
       </TransitionSeries.Sequence>
+      {smooth('t3b')}
+      <TransitionSeries.Sequence durationInFrames={FULL.s5b} name="5B Adult content block">
+        <Scene5bAdultBlock duration={FULL.s5b} />
+      </TransitionSeries.Sequence>
       {smooth('t3')}
       <TransitionSeries.Sequence durationInFrames={FULL.s6} name="6 Features">
         <Scene6Features />
@@ -67,7 +72,7 @@ export const LockedPromo: React.FC<AudioProps> = (props) => (
   </Frame>
 );
 
-/** 15s cut: scenes 1, 3, 5, 7. */
+/** 15s cut: scenes 1, 3, 5, 5B (adult content), 7. */
 export const LockedPromo15: React.FC<AudioProps> = (props) => (
   <Frame {...props}>
     <TransitionSeries>
@@ -80,6 +85,10 @@ export const LockedPromo15: React.FC<AudioProps> = (props) => (
       {smooth('t5')}
       <TransitionSeries.Sequence durationInFrames={SHORT.s5} name="5 Lockout">
         <Scene5Lockout duration={SHORT.s5} />
+      </TransitionSeries.Sequence>
+      {smooth('t5b')}
+      <TransitionSeries.Sequence durationInFrames={SHORT.s5b} name="5B Adult content block">
+        <Scene5bAdultBlock duration={SHORT.s5b} />
       </TransitionSeries.Sequence>
       {smooth('t6')}
       <TransitionSeries.Sequence durationInFrames={SHORT.s7} name="7 Logo">

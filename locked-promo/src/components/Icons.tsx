@@ -69,3 +69,26 @@ export const Padlock: React.FC<{size: number; closed?: number; color?: string; a
     </svg>
   );
 };
+
+/** Shield with a "blocked" slash. `slash` 0→1 draws the slash in. */
+export const ShieldBlock: React.FC<{size: number; slash?: number; color?: string; accent?: string}> = ({
+  size,
+  slash = 1,
+  color = '#FFFFFF',
+  accent = '#0B0B0C',
+}) => (
+  <svg width={size} height={size * 1.15} viewBox="0 0 100 115" style={{overflow: 'visible'}}>
+    <path d="M50 4 92 18v36c0 28-18 48-42 57C26 102 8 82 8 54V18z" fill={color} />
+    <circle cx={50} cy={56} r={22} fill="none" stroke={accent} strokeWidth={8} />
+    <line
+      x1={35}
+      y1={71}
+      x2={65}
+      y2={41}
+      stroke={accent}
+      strokeWidth={8}
+      strokeDasharray={43}
+      strokeDashoffset={43 * (1 - slash)}
+    />
+  </svg>
+);

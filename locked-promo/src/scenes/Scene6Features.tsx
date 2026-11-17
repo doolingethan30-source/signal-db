@@ -4,7 +4,7 @@ import {content} from '../content';
 import {colors, SNAP} from '../theme';
 
 const FIRST = 10;
-const STAGGER = 34;
+const STAGGER = 26;
 
 export const Scene6Features: React.FC = () => {
   const frame = useCurrentFrame();

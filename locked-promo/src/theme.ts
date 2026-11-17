@@ -26,32 +26,35 @@ export const snap = (frame: number, fps: number, delay = 0, config = SNAP, durat
   spring({frame: frame - delay, fps, config, durationInFrames});
 
 /**
- * Timeline. Scenes 1→2→3 are hard cuts. Scenes 3→4→5→6→7 use a
+ * Timeline. Scenes 1→2→3 are hard cuts. From scene 3 on, scenes use a
  * TRANSITION-frame crossfade, so those scenes are a little longer than
  * their on-screen slot (the overlap is subtracted from the total).
  *
- *   Full 30s:  1(0-3s) 2(3-7s) 3(7-11s) 4(11-16s) 5(16-21s) 6(21-26s) 7(26-30s)
+ *   Full 30s:  1(0-3s) 2(3-6.5s) 3(6.5-10s) 4(10-14.5s) 5(14.5-19s)
+ *              5B adult-content block(19-23s) 6(23-26.5s) 7(26.5-30s)
  */
 export const TRANSITION = 12;
 
 export const FULL = {
   s1: 90,
-  s2: 120,
-  s3: 120 + TRANSITION / 2,
-  s4: 150 + TRANSITION,
-  s5: 150 + TRANSITION,
-  s6: 150 + TRANSITION,
-  s7: 120 + TRANSITION / 2,
+  s2: 105,
+  s3: 105 + TRANSITION / 2,
+  s4: 135 + TRANSITION,
+  s5: 135 + TRANSITION,
+  s5b: 120 + TRANSITION,
+  s6: 105 + TRANSITION,
+  s7: 105 + TRANSITION / 2,
 };
 export const FULL_TOTAL =
-  Object.values(FULL).reduce((a, b) => a + b, 0) - 4 * TRANSITION; // = 900 (30s)
+  Object.values(FULL).reduce((a, b) => a + b, 0) - 5 * TRANSITION; // = 900 (30s)
 
-/** 15s cut: scenes 1, 3, 5, 7 */
+/** 15s cut: scenes 1, 3, 5, 5B (adult content), 7 */
 export const SHORT = {
-  s1: 90,
-  s3: 105 + TRANSITION / 2,
-  s5: 135 + TRANSITION,
-  s7: 120 + TRANSITION / 2,
+  s1: 75,
+  s3: 80 + TRANSITION / 2,
+  s5: 105 + TRANSITION,
+  s5b: 100 + TRANSITION,
+  s7: 90 + TRANSITION / 2,
 };
 export const SHORT_TOTAL =
-  Object.values(SHORT).reduce((a, b) => a + b, 0) - 2 * TRANSITION; // = 450 (15s)
+  Object.values(SHORT).reduce((a, b) => a + b, 0) - 3 * TRANSITION; // = 450 (15s)

@@ -69,6 +69,8 @@ export const content = {
       {label: 'Streak', value: '12 days', sub: 'personal best'},
     ],
     partnerLine: 'Partner: Sam holds your code',
+    filterLine: 'Adult content filter',
+    filterStatus: 'ON',
   },
 
   // Scene 5 (16–21s): limit reached + lockout
@@ -78,6 +80,17 @@ export const content = {
     message: 'Your limit is up. Your partner has the code.',
     codeLabel: 'Enter unlock code',
     codeLength: 6,
+  },
+
+  // Scene 5B (~20–24s): adult content blocking
+  adultBlock: {
+    browserPlaceholder: 'Search or enter website',
+    blockedTitle: 'Blocked',
+    blockedMessage: 'Adult content is filtered on this phone.',
+    blockedSub: 'Only your partner can change this.',
+    headline: 'Blocks all adult content.',
+    accentWord: 'adult content.',
+    subline: 'Every app. Every browser.',
   },
 
   // Scene 6 (21–26s): feature lines (the yellow "//" is added automatically)
