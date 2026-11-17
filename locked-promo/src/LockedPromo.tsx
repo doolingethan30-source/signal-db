@@ -13,7 +13,7 @@ import {Scene5Lockout} from './scenes/Scene5Lockout';
 import {Scene5bAdultBlock} from './scenes/Scene5bAdultBlock';
 import {Scene6Features} from './scenes/Scene6Features';
 import {Scene7Logo} from './scenes/Scene7Logo';
-import {colors, FONT, FULL, SHORT, TRANSITION} from './theme';
+import {colors, FONT, FULL, SHORT, SHORT_LOCKOUT_CUT, TRANSITION} from './theme';
 
 ensureFonts();
 
@@ -26,12 +26,12 @@ const smooth = (key: string) => (
   />
 );
 
-const Frame: React.FC<{children: React.ReactNode} & AudioProps> = ({children, hasMusic, hasBuzz}) => (
+const Frame: React.FC<{children: React.ReactNode} & AudioProps> = ({children, hasMusic, hasBuzz, hasVoiceover}) => (
   <AbsoluteFill style={{backgroundColor: colors.bg, fontFamily: FONT}}>
     <MatteBackground />
     {children}
     <Grain />
-    <AudioLayer hasMusic={hasMusic} hasBuzz={hasBuzz} buzzAt={BUZZ_FRAME} />
+    <AudioLayer hasMusic={hasMusic} hasBuzz={hasBuzz} hasVoiceover={hasVoiceover} buzzAt={BUZZ_FRAME} />
   </AbsoluteFill>
 );
 
@@ -84,7 +84,7 @@ export const LockedPromo15: React.FC<AudioProps> = (props) => (
       </TransitionSeries.Sequence>
       {smooth('t5')}
       <TransitionSeries.Sequence durationInFrames={SHORT.s5} name="5 Lockout">
-        <Scene5Lockout duration={SHORT.s5} />
+        <Scene5Lockout duration={SHORT.s5} cut={SHORT_LOCKOUT_CUT} />
       </TransitionSeries.Sequence>
       {smooth('t5b')}
       <TransitionSeries.Sequence durationInFrames={SHORT.s5b} name="5B Adult content block">

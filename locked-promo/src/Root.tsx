@@ -1,6 +1,6 @@
 import React from 'react';
 import {CalculateMetadataFunction, Composition} from 'remotion';
-import {AudioProps, BUZZ_FILE, MUSIC_FILE, publicFileExists} from './components/AudioLayer';
+import {AudioProps, BUZZ_FILE, MUSIC_FILE, publicFileExists, VOICEOVER_FILE} from './components/AudioLayer';
 import {LockedPromo, LockedPromo15} from './LockedPromo';
 import {FPS, FULL_TOTAL, HEIGHT, SHORT_TOTAL, WIDTH} from './theme';
 
@@ -8,6 +8,12 @@ import {FPS, FULL_TOTAL, HEIGHT, SHORT_TOTAL, WIDTH} from './theme';
 const detectAudio: CalculateMetadataFunction<AudioProps> = async ({props}) => {
   const [hasMusic, hasBuzz] = await Promise.all([publicFileExists(MUSIC_FILE), publicFileExists(BUZZ_FILE)]);
   return {props: {...props, hasMusic, hasBuzz}};
+};
+
+const detectAudioWithVoiceover: CalculateMetadataFunction<AudioProps> = async (args) => {
+  const base = await detectAudio(args);
+  const hasVoiceover = await publicFileExists(VOICEOVER_FILE);
+  return {props: {...args.props, ...base.props, hasVoiceover}};
 };
 
 const defaults: AudioProps = {hasMusic: false, hasBuzz: false};
@@ -32,7 +38,7 @@ export const RemotionRoot: React.FC = () => (
       width={WIDTH}
       height={HEIGHT}
       defaultProps={defaults}
-      calculateMetadata={detectAudio}
+      calculateMetadata={detectAudioWithVoiceover}
     />
   </>
 );

@@ -7,10 +7,11 @@ import {colors, SLAM, SMOOTH, SNAP} from '../theme';
 import {PUSH_END} from './Scene4Home';
 
 const FILL_START = 4;
-const FILL_FRAMES = 44;
-const CUT = 60; // phone → full-screen lockout
+const DEFAULT_CUT = 60; // phone → full-screen lockout
 
-export const Scene5Lockout: React.FC<{duration: number}> = ({duration}) => {
+export const Scene5Lockout: React.FC<{duration: number; cut?: number}> = ({duration, cut = DEFAULT_CUT}) => {
+  const CUT = cut;
+  const FILL_FRAMES = CUT - 16;
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const hs = content.homeScreen;
