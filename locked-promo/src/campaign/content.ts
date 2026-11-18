@@ -24,15 +24,16 @@ export const campaign = {
     statusLabel: 'Protected',
     statusSub: 'Filtering is active on this phone',
     rows: [
-      {label: 'Adult content filter', sub: 'Every browser'},
-      {label: 'Strict mode', sub: 'Tighter filtering'},
-      {label: 'SafeSearch', sub: 'Always enforced'},
-      {label: 'High-risk apps', sub: 'Blocked'},
-      {label: 'Install lock', sub: 'Weakening needs your partner'},
+      {label: 'Adult websites', sub: 'Safari & in-app browsers'},
+      {label: 'Strict Protection', sub: 'Proxies & mirror links blocked'},
+      {label: 'SafeSearch', sub: 'Google, Bing & DuckDuckGo'},
+      {label: 'High-risk apps', sub: 'Reddit, X, other browsers'},
+      {label: 'Install lock', sub: 'No new apps or VPNs'},
     ],
     blockedTitle: 'Access blocked',
     blockedMessage: 'This content is filtered to protect you.',
     blockedSub: 'Take a breath. You’re in control.',
+    privacy: 'Blocked on your iPhone. LOCKED never sees what you visit.',
   },
 
   // Scene 4 (15–26s): your partner is the gatekeeper

@@ -109,6 +109,11 @@ export const C3Control: React.FC<{duration: number}> = ({duration}) => {
         <CineText text={s.headline} start={8} size={86} weight={800} />
         <CineText text={s.subline} start={BLOCK_AT + 6} size={44} weight={500} color={colors.silver} style={{marginTop: 18}} />
       </div>
+
+      {/* Privacy note */}
+      <div style={{position: 'absolute', bottom: 150, left: 110, right: 110, textAlign: 'center'}}>
+        <CineText text={s.privacy} start={BLOCK_AT + 26} size={34} weight={500} color={colors.grey} />
+      </div>
     </AbsoluteFill>
   );
 };

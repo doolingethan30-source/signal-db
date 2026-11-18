@@ -87,10 +87,10 @@ export const content = {
     browserPlaceholder: 'Search or enter website',
     blockedTitle: 'Blocked',
     blockedMessage: 'Adult content is filtered on this phone.',
-    blockedSub: 'Only your partner can change this.',
-    headline: 'Blocks all adult content.',
+    blockedSub: 'Turning it off needs your partner.',
+    headline: 'Blocks adult content.',
     accentWord: 'adult content.',
-    subline: 'Every app. Every browser.',
+    subline: 'Websites. Search. Risky apps.',
   },
 
   // Scene 6 (21–26s): feature lines (the yellow "//" is added automatically)

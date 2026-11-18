@@ -38,7 +38,7 @@ for (const [id, file] of jobs) {
     '-vf', 'scale=in_range=full:out_range=tv', '-color_range', 'tv', '-colorspace', 'bt709',
     '-color_primaries', 'bt709', '-color_trc', 'bt709', '-crf', '21', '-preset', 'slow',
     '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11', '-ar', '48000',
-    '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', tmp], {stdio: 'inherit'});
+    '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', tmp], {stdio: 'inherit'});
   renameSync(tmp, file);
 }
 console.log(`\n✔ Done: ${jobs.map((j) => j[1]).join(', ')}`);
