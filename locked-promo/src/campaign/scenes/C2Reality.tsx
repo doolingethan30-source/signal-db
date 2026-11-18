@@ -61,7 +61,7 @@ export const C2Reality: React.FC<{duration: number; footage: boolean}> = ({durat
 
   // Fast scroll that slows… then a pause (hesitation)… a small drift back… lock.
   const scroll = spring({frame: frame - 4, fps, config: {damping: 200, stiffness: 40}, durationInFrames: 62});
-  const drift = spring({frame: frame - 74, fps, config: {damping: 200}, durationInFrames: 18});
+  const drift = spring({frame: frame - 66, fps, config: {damping: 200}, durationInFrames: 18});
   const offset = -scroll * 2600 + drift * 70;
 
   const locked = frame >= LOCK;

@@ -24,7 +24,7 @@ const cross = (key: string) => (
 );
 
 /** "Don't fight alone": 40s cinematic campaign film. */
-export const Campaign: React.FC<CampaignProps> = ({hasMusic, hasBed, hasVoiceover, footage}) => (
+export const Campaign: React.FC<CampaignProps> = ({hasMusic, hasBed, hasVoiceover, hasPartnerVo, footage}) => (
   <AbsoluteFill style={{backgroundColor: colors.bg, fontFamily: FONT}}>
     <TransitionSeries>
       <TransitionSeries.Sequence durationInFrames={C.c1} name="1 The struggle">
@@ -39,7 +39,7 @@ export const Campaign: React.FC<CampaignProps> = ({hasMusic, hasBed, hasVoiceove
         <C3Control duration={C.c3} />
       </TransitionSeries.Sequence>
       {cross('x3')}
-      <TransitionSeries.Sequence durationInFrames={C.c4} name="4 Accountability">
+      <TransitionSeries.Sequence durationInFrames={C.c4} name="4 Partner = gatekeeper">
         <C4Accountability duration={C.c4} />
       </TransitionSeries.Sequence>
       {cross('x4')}
@@ -52,6 +52,6 @@ export const Campaign: React.FC<CampaignProps> = ({hasMusic, hasBed, hasVoiceove
       </TransitionSeries.Sequence>
     </TransitionSeries>
     <Grain opacity={0.08} />
-    <CampaignAudio hasMusic={hasMusic} hasBed={hasBed} hasVoiceover={hasVoiceover} />
+    <CampaignAudio hasMusic={hasMusic} hasBed={hasBed} hasVoiceover={hasVoiceover} hasPartnerVo={hasPartnerVo} />
   </AbsoluteFill>
 );

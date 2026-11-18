@@ -7,9 +7,9 @@ import {CineText} from '../CineText';
 import {campaign} from '../content';
 import {ShieldCheck, Toggle, UICard} from '../ui';
 
-const ROW_START = 34;
-const ROW_EVERY = 12;
-const BLOCK_AT = 118;
+const ROW_START = 28;
+const ROW_EVERY = 11;
+const BLOCK_AT = 104;
 
 export const C3Control: React.FC<{duration: number}> = ({duration}) => {
   const frame = useCurrentFrame();

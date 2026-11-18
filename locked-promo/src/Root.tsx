@@ -21,15 +21,16 @@ const detectAudioWithVoiceover: CalculateMetadataFunction<AudioProps> = async (a
 };
 
 const detectCampaign: CalculateMetadataFunction<CampaignProps> = async ({props}) => {
-  const [hasMusic, hasBed, s1, s2, s5, hasVoiceover] = await Promise.all([
+  const [hasMusic, hasBed, s1, s2, s5, hasVoiceover, hasPartnerVo] = await Promise.all([
     publicFileExists(MUSIC_FILE),
     publicFileExists('sfx/ambient-bed.mp3'),
     publicFileExists(FOOTAGE.s1),
     publicFileExists(FOOTAGE.s2),
     publicFileExists(FOOTAGE.s5),
     publicFileExists(`${VO_DIR}/${VO_LINES[0].file}`),
+    publicFileExists(`${VO_DIR}/p1.mp3`),
   ]);
-  return {props: {...props, hasMusic, hasBed, hasVoiceover, footage: {s1, s2, s5}}};
+  return {props: {...props, hasMusic, hasBed, hasVoiceover, hasPartnerVo, footage: {s1, s2, s5}}};
 };
 
 const defaults: AudioProps = {hasMusic: false, hasBuzz: false};

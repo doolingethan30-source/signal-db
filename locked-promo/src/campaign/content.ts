@@ -6,17 +6,17 @@
  */
 
 export const campaign = {
-  // Scene 1 (0–5s): the struggle
+  // Scene 1 (0–4.5s): the struggle
   s1: {
     line: 'Some battles happen in silence.',
   },
 
-  // Scene 2 (5–10s): the reality
+  // Scene 2 (4.5–9s): the reality
   s2: {
     line: 'What you consume matters.',
   },
 
-  // Scene 3 (10–17s): take control
+  // Scene 3 (9–15s): take control
   s3: {
     headline: 'Block adult content.',
     subline: 'Protect your digital environment.',
@@ -24,34 +24,63 @@ export const campaign = {
     statusLabel: 'Protected',
     statusSub: 'Filtering is active on this phone',
     rows: [
-      {label: 'Adult website blocking', sub: 'Every browser'},
-      {label: 'Content restrictions', sub: 'Apps & search results'},
-      {label: 'Safe search', sub: 'Always enforced'},
-      {label: 'Partner lock', sub: 'Changes need your partner'},
+      {label: 'Adult content filter', sub: 'Every browser'},
+      {label: 'Strict mode', sub: 'Tighter filtering'},
+      {label: 'SafeSearch', sub: 'Always enforced'},
+      {label: 'High-risk apps', sub: 'Blocked'},
+      {label: 'Install lock', sub: 'Weakening needs your partner'},
     ],
     blockedTitle: 'Access blocked',
     blockedMessage: 'This content is filtered to protect you.',
     blockedSub: 'Take a breath. You’re in control.',
   },
 
-  // Scene 4 (17–25s): accountability
+  // Scene 4 (15–26s): your partner is the gatekeeper
   s4: {
-    headline: 'Stay accountable.',
-    subline: 'Find someone who helps you stay on track.',
-    partnerName: 'Sam',
+    headline: 'Your partner holds the key.',
+    subline: 'Stronger anytime. Weaker needs them.',
     youLabel: 'You',
-    message: 'Hey, just checking in. Stay strong. You’ve got this.',
-    connectedLabel: 'Accountability partner',
-    connectedStatus: 'Connected',
-    checkInTitle: 'Daily check-in',
-    checkInButton: 'I’m staying on track',
-    checkInDone: 'Checked in. Sam will see it.',
-    progressLabel: 'Days committed',
-    progressValue: 12,
-    progressGoal: 30,
+    partnerLabel: 'Sam · your partner',
+    youName: 'Alex', // the user's name as it appears in partner emails
+    partnerName: 'Sam',
+    // Your phone
+    screenTitle: 'Protection',
+    protectionLabel: 'Protection',
+    strictLabel: 'Strict mode',
+    safeSearchLabel: 'SafeSearch',
+    appliedToast: 'Applied instantly. Sam has been emailed.',
+    sheetTitle: 'This needs Sam',
+    sheetBody: 'Making protection weaker needs your partner’s one-time code.',
+    askButton: 'Ask Sam',
+    codeTitle: 'Enter Sam’s code',
+    codeNote: 'Sam has been emailed a one-time code',
+    // Sam's phone (email)
+    inboxTitle: 'Inbox',
+    emailFrom: 'LOCKED',
+    strongerSubject: 'Alex made protection stronger',
+    strongerBody: 'Strict mode was turned on. No action needed.',
+    weakerSubject: 'Alex asked to turn protection off',
+    weakerCode: '482 913',
+    weakerBody: 'Valid for 48 hours. Only share it if you agree.',
+    alertsTitle: 'Sam is also emailed if:',
+    alerts: [
+      'The filter is switched off in Settings',
+      'Screen Time access is removed',
+      'Your account signs in on a new device',
+      'Premium ends or the account is deleted',
+    ],
+    // Captions under the phones
+    captions: {
+      stronger: 'Make it stronger: it applies instantly.',
+      strongerSub: 'Your partner is emailed what changed.',
+      weaker: 'Make it weaker: your partner gets a one-time code.',
+      agree: 'If they agree, they share it.',
+      nothing: 'Without the code, nothing changes.',
+      alerts: 'Try to switch it off? Your partner is told.',
+    },
   },
 
-  // Scene 5 (25–33s): you are not alone
+  // Scene 5 (26–33s): you are not alone
   s5: {
     line: 'You don’t have to fight alone.',
   },
