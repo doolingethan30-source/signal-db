@@ -24,7 +24,7 @@ const cross = (key: string) => (
 );
 
 /** "Don't fight alone": 40s cinematic campaign film. */
-export const Campaign: React.FC<CampaignProps> = ({hasMusic, hasBed, footage}) => (
+export const Campaign: React.FC<CampaignProps> = ({hasMusic, hasBed, hasVoiceover, footage}) => (
   <AbsoluteFill style={{backgroundColor: colors.bg, fontFamily: FONT}}>
     <TransitionSeries>
       <TransitionSeries.Sequence durationInFrames={C.c1} name="1 The struggle">
@@ -52,6 +52,6 @@ export const Campaign: React.FC<CampaignProps> = ({hasMusic, hasBed, footage}) =
       </TransitionSeries.Sequence>
     </TransitionSeries>
     <Grain opacity={0.08} />
-    <CampaignAudio hasMusic={hasMusic} hasBed={hasBed} />
+    <CampaignAudio hasMusic={hasMusic} hasBed={hasBed} hasVoiceover={hasVoiceover} />
   </AbsoluteFill>
 );

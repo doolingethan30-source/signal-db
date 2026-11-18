@@ -5,6 +5,7 @@ import {LockedPromo, LockedPromo15} from './LockedPromo';
 import {Campaign, CampaignProps} from './campaign/Campaign';
 import {FOOTAGE} from './campaign/FootageSlot';
 import {CAMPAIGN_TOTAL} from './campaign/timing';
+import {VO_DIR, VO_LINES} from './campaign/voiceover';
 import {FPS, FULL_TOTAL, HEIGHT, SHORT_TOTAL, WIDTH} from './theme';
 
 // Detect optional audio files before rendering. Missing files → silent render, no crash.
@@ -20,14 +21,15 @@ const detectAudioWithVoiceover: CalculateMetadataFunction<AudioProps> = async (a
 };
 
 const detectCampaign: CalculateMetadataFunction<CampaignProps> = async ({props}) => {
-  const [hasMusic, hasBed, s1, s2, s5] = await Promise.all([
+  const [hasMusic, hasBed, s1, s2, s5, hasVoiceover] = await Promise.all([
     publicFileExists(MUSIC_FILE),
     publicFileExists('sfx/ambient-bed.mp3'),
     publicFileExists(FOOTAGE.s1),
     publicFileExists(FOOTAGE.s2),
     publicFileExists(FOOTAGE.s5),
+    publicFileExists(`${VO_DIR}/${VO_LINES[0].file}`),
   ]);
-  return {props: {...props, hasMusic, hasBed, footage: {s1, s2, s5}}};
+  return {props: {...props, hasMusic, hasBed, hasVoiceover, footage: {s1, s2, s5}}};
 };
 
 const defaults: AudioProps = {hasMusic: false, hasBuzz: false};

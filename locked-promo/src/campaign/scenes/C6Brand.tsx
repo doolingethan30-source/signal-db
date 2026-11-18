@@ -31,7 +31,7 @@ export const C6Brand: React.FC<{duration: number}> = ({duration}) => {
         {/* Main lines */}
         <div style={{position: 'absolute', textAlign: 'center'}}>
           {s.main.map((line, i) => (
-            <CineText key={line} text={line} start={10 + i * 18} end={LOGO - 18} size={92} weight={800} style={{marginTop: i ? 10 : 0}} />
+            <CineText key={line} text={line} start={6 + i * 30} end={LOGO - 14} size={92} weight={800} style={{marginTop: i ? 10 : 0}} />
           ))}
         </div>
 
