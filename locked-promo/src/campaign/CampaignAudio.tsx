@@ -38,7 +38,7 @@ export const CampaignAudio: React.FC<CampaignAudioProps> = ({hasMusic, hasBed, h
       <Sfx at={START.c5 + CUES.riser} file="sfx/riser.wav" volume={hasVoiceover ? 0.35 : 0.55} frames={90} name="SFX: light riser" />
       <Sfx at={START.c6 + CUES.logoHit} file="sfx/logo-hit.wav" volume={0.85} frames={105} name="SFX: logo hit" />
       {hasVoiceover
-        ? VO_LINES.filter((l) => !l.partner || hasPartnerVo).map((l) => (
+        ? VO_LINES.map((l) => (
             <Sequence key={l.file} from={Math.round(l.at * fps)} name={`VO: ${l.text}`}>
               <Audio src={staticFile(`${VO_DIR}/${l.file}`)} volume={1} />
             </Sequence>

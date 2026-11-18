@@ -3,15 +3,15 @@
  * T frames, so each sequence is padded by T (half at the ends).
  *
  *  1 Struggle 0–4.5s   2 Reality 4.5–9s   3 Take control 9–15s
- *  4 Partner = gatekeeper 15–26s   5 Not alone 26–33s   6 Brand + launch 33–40s
+ *  4 Partner = gatekeeper 14.7–27.2s   5 Not alone 27.2–32.7s   6 Brand + launch 33–40s
  */
 export const T = 16;
 export const C = {
   c1: 135 + T / 2,
   c2: 135 + T,
   c3: 180 + T,
-  c4: 330 + T,
-  c5: 210 + T,
+  c4: 375 + T,
+  c5: 165 + T,
   c6: 210 + T / 2,
 };
 export const CAMPAIGN_TOTAL = Object.values(C).reduce((a, b) => a + b, 0) - 5 * T; // 1200 = 40s
@@ -31,9 +31,9 @@ export const START = (() => {
 /** Local frames (within a scene) where sound effects land */
 export const CUES = {
   lockClick: 88, // scene 2: screen locks
-  chime: 52, // scene 4: "stronger" email lands on partner's phone
-  codeChime: 186, // scene 4: one-time code email lands on partner's phone
-  riser: 40, // scene 5: swell into the morning light
+  chime: 160, // scene 4: "stronger" email lands on partner's phone
+  codeChime: 246, // scene 4: one-time code email lands on partner's phone
+  riser: 10, // scene 5: swell into the morning light
   logoHit: 110, // scene 6: logo reveal
-  launch: 168, // scene 6: "Coming this December" line
+  launch: 138, // scene 6: "Coming this December" line
 };

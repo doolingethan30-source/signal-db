@@ -1,36 +1,41 @@
 /**
  * ─── CAMPAIGN VOICE-OVER ────────────────────────────────────────
- * Source read (ElevenLabs, "Lara"): audio-src/voiceover-campaign-elevenlabs.mp3
+ * Source read (ElevenLabs, "Emma"): audio-src/voiceover-campaign-emma-v2.mp3
  * Loudness-normalised and split into one clip per line in
  * public/vo-campaign/NN.mp3, so each line lands exactly on its scene.
- *
- * Partner lines (p1–p3) are a separate ElevenLabs read; they're used only
- * once public/vo-campaign/p1.mp3 exists.
+ * (Previous Lara clips are kept in audio-src/old-vo-lara/.)
  *
  * To nudge a line earlier/later, change its `at` (seconds into the film).
+ * If public/vo-campaign/ is missing, the film renders without voice-over.
  * ────────────────────────────────────────────────────────────────
  */
 export const VO_DIR = 'vo-campaign';
 
-export type VoLine = {file: string; at: number; text: string; partner?: boolean};
+export type VoLine = {file: string; at: number; text: string};
 
 export const VO_LINES: VoLine[] = [
-  {file: '01.mp3', at: 0.5, text: 'Some battles happen in silence.'},
-  {file: '02.mp3', at: 4.5, text: "Late at night. When no one's watching."},
+  // Scene 1: the struggle
+  {file: '01.mp3', at: 0.4, text: "Some battles happen in silence. Late at night, when no one's watching."},
+  // Scene 2: the reality
+  {file: '02.mp3', at: 5.05, text: 'One scroll turns into another.'},
   // 7.17s: screen locks (click)
-  {file: '03.mp3', at: 7.6, text: 'What you let in… matters.'},
-  {file: '04.mp3', at: 9.8, text: 'LOCKED blocks adult content before it reaches you. Across every app and browser.'},
-  {file: '05.mp3', at: 15.0, text: "But real change isn't built alone."},
-  // Partner = gatekeeper (scene 4, 14.7–26s)
-  {file: 'p1.mp3', at: 17.3, text: 'You can always make protection stronger.', partner: true},
-  {file: 'p2.mp3', at: 19.5, text: 'But to weaken it, your partner gets a one-time code.', partner: true},
-  {file: 'p3.mp3', at: 22.4, text: 'If they agree, they share it. Without it, nothing changes.', partner: true},
-  {file: '07.mp3', at: 26.3, text: 'Put the phone down. Let the light in.'},
-  {file: '08.mp3', at: 30.7, text: "You don't have to fight alone."},
-  {file: '09.mp3', at: 32.9, text: 'Take control.'},
-  {file: '10.mp3', at: 33.9, text: 'Stay accountable.'},
-  {file: '11.mp3', at: 34.95, text: 'Keep growing.'},
+  {file: '03.mp3', at: 7.4, text: 'But what you let in… matters.'},
+  // Scene 3: take control
+  {file: '04.mp3', at: 9.5, text: 'LOCKED blocks adult websites, explicit search results, and the risky apps you choose.'},
+  {file: '05.mp3', at: 14.7, text: 'Right on your iPhone.'},
+  // Scene 4: partner = gatekeeper
+  {file: '06.mp3', at: 16.0, text: "And it's built around someone you trust."},
+  {file: '07.mp3', at: 18.15, text: 'Make protection stronger, and it happens instantly.'},
+  {file: '08.mp3', at: 21.35, text: 'To weaken it, your partner gets a one-time code.'},
+  {file: '09.mp3', at: 24.1, text: 'No code? Nothing changes.'},
+  // Scene 5: not alone
+  {file: '10.mp3', at: 27.3, text: 'So put the phone down. Let the light in.'},
+  {file: '11.mp3', at: 30.4, text: "You don't have to fight this alone."},
+  // Scene 6: brand + launch
+  {file: '12.mp3', at: 32.9, text: 'Take control.'},
+  {file: '13.mp3', at: 33.9, text: 'Stay accountable.'},
+  {file: '14.mp3', at: 35.05, text: 'Keep growing.'},
   // 36.4s: logo hit
-  {file: '12.mp3', at: 36.55, text: 'LOCKED.'},
-  {file: '13.mp3', at: 38.3, text: 'Coming this December.'},
+  {file: '15.mp3', at: 36.55, text: 'LOCKED.'},
+  {file: '16.mp3', at: 37.35, text: 'Coming to the App Store this December.'},
 ];

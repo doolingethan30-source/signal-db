@@ -14,17 +14,17 @@ import {Toggle, UICard} from '../ui';
  *  B  Weaker   → "Ask Sam" → partner gets a one-time code (48h) → no code, no change.
  *  C  Partner is also emailed automatically on tamper events.
  */
-const STRICT_ON = 26;
-const TOAST = 36;
+const STRICT_ON = 140;
+const TOAST = 150;
 const STRONGER_MAIL = CUES.chime; // 52
-const B_START = 130;
-const SHEET = 140;
-const ASK = 166;
-const CODE_SCREEN = 176;
+const B_START = 196;
+const SHEET = 204;
+const ASK = 222;
+const CODE_SCREEN = 230;
 const CODE_MAIL = CUES.codeChime; // 186
-const AGREE = 222;
-const NOTHING = 250;
-const C_START = 282;
+const AGREE = 262;
+const NOTHING = 290;
+const C_START = 322;
 
 const PHONE_SCALE = 0.62;
 const PHONE_TOP = 520;
