@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "studio": "remotion studio",
-    "render": "node render.mjs"
+    "render": "node render.mjs",
+    "render:campaign": "node render.mjs campaign"
   },
   "dependencies": {
     "@remotion/cli": "4.0.544",

@@ -2,6 +2,9 @@ import React from 'react';
 import {CalculateMetadataFunction, Composition} from 'remotion';
 import {AudioProps, BUZZ_FILE, MUSIC_FILE, publicFileExists, VOICEOVER_FILE} from './components/AudioLayer';
 import {LockedPromo, LockedPromo15} from './LockedPromo';
+import {Campaign, CampaignProps} from './campaign/Campaign';
+import {FOOTAGE} from './campaign/FootageSlot';
+import {CAMPAIGN_TOTAL} from './campaign/timing';
 import {FPS, FULL_TOTAL, HEIGHT, SHORT_TOTAL, WIDTH} from './theme';
 
 // Detect optional audio files before rendering. Missing files → silent render, no crash.
@@ -14,6 +17,17 @@ const detectAudioWithVoiceover: CalculateMetadataFunction<AudioProps> = async (a
   const base = await detectAudio(args);
   const hasVoiceover = await publicFileExists(VOICEOVER_FILE);
   return {props: {...args.props, ...base.props, hasVoiceover}};
+};
+
+const detectCampaign: CalculateMetadataFunction<CampaignProps> = async ({props}) => {
+  const [hasMusic, hasBed, s1, s2, s5] = await Promise.all([
+    publicFileExists(MUSIC_FILE),
+    publicFileExists('sfx/ambient-bed.mp3'),
+    publicFileExists(FOOTAGE.s1),
+    publicFileExists(FOOTAGE.s2),
+    publicFileExists(FOOTAGE.s5),
+  ]);
+  return {props: {...props, hasMusic, hasBed, footage: {s1, s2, s5}}};
 };
 
 const defaults: AudioProps = {hasMusic: false, hasBuzz: false};
@@ -39,6 +53,16 @@ export const RemotionRoot: React.FC = () => (
       height={HEIGHT}
       defaultProps={defaults}
       calculateMetadata={detectAudioWithVoiceover}
+    />
+    <Composition
+      id="LockedCampaign"
+      component={Campaign}
+      durationInFrames={CAMPAIGN_TOTAL}
+      fps={FPS}
+      width={WIDTH}
+      height={HEIGHT}
+      defaultProps={{hasMusic: false, hasBed: false, footage: {s1: false, s2: false, s5: false}}}
+      calculateMetadata={detectCampaign}
     />
   </>
 );
