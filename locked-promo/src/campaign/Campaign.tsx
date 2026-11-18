@@ -23,7 +23,7 @@ const cross = (key: string) => (
   <TransitionSeries.Transition key={key} presentation={fade()} timing={springTiming({config: {damping: 200}, durationInFrames: T})} />
 );
 
-/** "Don't fight alone": 39s cinematic campaign film. */
+/** "Don't fight alone": 40s cinematic campaign film. */
 export const Campaign: React.FC<CampaignProps> = ({hasMusic, hasBed, footage}) => (
   <AbsoluteFill style={{backgroundColor: colors.bg, fontFamily: FONT}}>
     <TransitionSeries>

@@ -7,6 +7,7 @@ import {campaign} from '../content';
 import {CUES} from '../timing';
 
 const LOGO = CUES.logoHit;
+const LAUNCH = CUES.launch;
 
 export const C6Brand: React.FC<{duration: number}> = ({duration}) => {
   const frame = useCurrentFrame();
@@ -17,6 +18,7 @@ export const C6Brand: React.FC<{duration: number}> = ({duration}) => {
   const word = spring({frame: frame - LOGO - 12, fps, config: {damping: 200, stiffness: 90}, durationInFrames: 26});
   const spacing = interpolate(word, [0, 1], [-0.06, 0.42]);
   const push = interpolate(frame, [0, duration], [1, 1.04]);
+  const launch = spring({frame: frame - LAUNCH, fps, config: {damping: 200, stiffness: 60}, durationInFrames: 26});
   // Warm morning light lingers at the top, then settles into black
   const warm = interpolate(frame, [0, 90], [0.28, 0.08], {extrapolateRight: 'clamp'});
 
@@ -55,6 +57,23 @@ export const C6Brand: React.FC<{duration: number}> = ({duration}) => {
           <div style={{marginTop: 70, maxWidth: 820, textAlign: 'center'}}>
             <CineText text={s.supporting} start={LOGO + 30} size={40} weight={500} color={colors.silver} />
           </div>
+        </div>
+      </AbsoluteFill>
+
+      {/* Launch line */}
+      <AbsoluteFill style={{justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 250}}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 18,
+            opacity: launch,
+            filter: `blur(${(1 - launch) * 8}px)`,
+            transform: `translateY(${(1 - launch) * 18}px)`,
+          }}
+        >
+          <span style={{width: 12, height: 12, borderRadius: 6, background: colors.yellow}} />
+          <span style={{color: colors.white, fontSize: 40, fontWeight: 600, letterSpacing: '-0.01em'}}>{s.launch}</span>
         </div>
       </AbsoluteFill>
     </AbsoluteFill>

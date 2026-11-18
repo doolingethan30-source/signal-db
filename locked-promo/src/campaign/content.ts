@@ -56,10 +56,11 @@ export const campaign = {
     line: 'You don’t have to fight alone.',
   },
 
-  // Scene 6 (33–39s): brand message
+  // Scene 6 (33–40s): brand message + launch
   s6: {
     main: ['Take control.', 'Stay accountable.', 'Keep growing.'],
     supporting: 'Build better habits. Protect your mind. Don’t fight alone.',
     wordmark: 'LOCKED',
+    launch: 'Coming to the App Store this December.',
   },
 } as const;
